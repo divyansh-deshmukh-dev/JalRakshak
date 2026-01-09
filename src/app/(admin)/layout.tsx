@@ -32,7 +32,6 @@ import {
 import { cn } from '@/lib/utils';
 import mockData from '@/data/mockWaterData.json';
 
-
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/realtime', label: 'Real-Time Monitoring', icon: Clock },
@@ -49,18 +48,33 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem('adminLoggedIn');
-    if (loggedIn !== 'true') {
-      router.push('/admin/login');
+    if (typeof window !== 'undefined') {
+      const loggedIn = localStorage.getItem('adminLoggedIn');
+      if (loggedIn !== 'true' && pathname !== '/admin/login') {
+        router.push('/admin/login');
+      } else {
+        setIsCheckingAuth(false);
+      }
     }
-  }, [router]);
+  }, [router, pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem('adminLoggedIn');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('adminLoggedIn');
+    }
     router.push('/admin/login');
   };
+  
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
+  if (isCheckingAuth) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
 
   const NavLink = ({ item }: { item: typeof navItems[0]}) => (
     <Link

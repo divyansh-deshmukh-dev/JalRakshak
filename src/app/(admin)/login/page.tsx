@@ -17,7 +17,7 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     // If already logged in, redirect to dashboard
-    if (localStorage.getItem('adminLoggedIn') === 'true') {
+    if (typeof window !== 'undefined' && localStorage.getItem('adminLoggedIn') === 'true') {
       router.replace('/admin/dashboard');
     }
   }, [router]);
@@ -30,7 +30,9 @@ export default function AdminLoginPage() {
     // Mock authentication
     setTimeout(() => {
       if (email === 'admin@indore.gov.in' && password === 'password') {
-        localStorage.setItem('adminLoggedIn', 'true');
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('adminLoggedIn', 'true');
+        }
         router.push('/admin/dashboard');
       } else {
         setError('Invalid credentials. Please try again.');
