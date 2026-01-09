@@ -51,7 +51,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     </Link>
   );
 
-  const sidebarContent = (isMobile: boolean = false) => (
+  const sidebarContent = (
     <div className="flex h-full flex-col gap-2">
       <div className="flex h-16 items-center border-b px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold text-gray-800">
@@ -72,7 +72,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-gray-50/75 lg:block">
-        {sidebarContent()}
+        {sidebarContent}
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-white px-6 sticky top-0 z-30 lg:h-16">
