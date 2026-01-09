@@ -1,84 +1,119 @@
 "use client";
 
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Filter, CheckCircle, Clock } from 'lucide-react';
 import mockData from '@/data/mockWaterData.json';
-import { AlertTriangle, Info } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
+import StatusBadge from '@/components/shared/StatusBadge';
+import { differenceInHours, parseISO } from 'date-fns';
 
-const severityInfo = {
-  Critical: {
-    icon: AlertTriangle,
-    badgeClass: "bg-red-500 hover:bg-red-500",
-    textClass: "text-red-800",
-    bgClass: "bg-red-50",
-    borderClass: "border-red-200"
-  },
-  High: {
-    icon: AlertTriangle,
-    badgeClass: "bg-orange-500 hover:bg-orange-500",
-    textClass: "text-orange-800",
-    bgClass: "bg-orange-50",
-    borderClass: "border-orange-200"
-  },
-  Medium: {
-    icon: Info,
-    badgeClass: "bg-yellow-500 hover:bg-yellow-500",
-    textClass: "text-yellow-800",
-    bgClass: "bg-yellow-50",
-    borderClass: "border-yellow-200"
-  },
-   Low: {
-    icon: Info,
-    badgeClass: "bg-blue-500 hover:bg-blue-500",
-    textClass: "text-blue-800",
-    bgClass: "bg-blue-50",
-    borderClass: "border-blue-200"
-  }
-};
+export default function AlertsPage() {
+    const [alerts, setAlerts] = useState(mockData.alerts.map(a => ({
+        ...a,
+        resolutionTime: a.status === 'Resolved' && a.resolutionTime ? differenceInHours(parseISO(a.resolutionTime), parseISO(a.timestamp)) : null
+    })));
 
-export default function PublicAlertsPage() {
-    const activeAlerts = mockData.alerts.filter(alert => alert.status !== "Resolved");
+    const [filters, setFilters] = useState({ severity: 'all', ward: 'all', status: 'all' });
 
-  return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Public Water Quality Alerts</CardTitle>
-          <CardDescription>
-            Current active alerts regarding water quality in Indore.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            {activeAlerts.length > 0 ? (
-                activeAlerts.map(alert => {
-                    const info = severityInfo[alert.severity as keyof typeof severityInfo];
-                    const Icon = info.icon;
-                    return (
-                        <div key={alert.alertId} className={cn("p-4 rounded-lg border flex items-start gap-4", info.bgClass, info.borderClass)}>
-                            <Icon className={cn("h-6 w-6 mt-1", info.textClass)} />
-                            <div className="flex-1">
-                                <div className="flex justify-between items-center">
-                                    <h3 className={cn("font-bold", info.textClass)}>{alert.ward}</h3>
-                                    <Badge className={cn(info.badgeClass, "text-white")}>{alert.severity}</Badge>
-                                </div>
-                                <p className={cn("text-sm", info.textClass)}>{alert.description}</p>
-                                <p className={cn("text-xs mt-2", info.textClass, "opacity-70")}>
-                                    Issued: {new Date(alert.timestamp).toLocaleString()}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                })
-            ) : (
-                <div className="text-center py-12">
-                    <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4"/>
-                    <h3 className="text-xl font-semibold">No Active Alerts</h3>
-                    <p className="text-muted-foreground">Water quality is stable across all monitored zones.</p>
+    const filteredAlerts = alerts.filter(alert => {
+        return (filters.severity === 'all' || alert.severity === filters.severity) &&
+               (filters.ward === 'all' || alert.ward === filters.ward) &&
+               (filters.status === 'all' || alert.status === filters.status);
+    });
+
+    const uniqueWards = [...new Set(mockData.alerts.map(a => a.ward))];
+
+    const SeverityBadge = ({ severity }: { severity: string }) => (
+         <Badge className={cn(
+            "font-semibold text-white",
+            severity === 'Critical' && "bg-red-500",
+            severity === 'High' && "bg-orange-500",
+            severity === 'Medium' && "bg-yellow-500 text-gray-800",
+            severity === 'Low' && "bg-blue-500",
+        )}>
+            {severity}
+        </Badge>
+    );
+    
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Alert & Resolution History</CardTitle>
+                <CardDescription>A transparent log of all water quality alerts and the actions taken.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="flex items-center gap-4 mb-4 p-4 bg-gray-50 rounded-lg border">
+                    <Filter className="h-5 w-5 text-muted-foreground"/>
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <Select value={filters.severity} onValueChange={v => setFilters({...filters, severity: v})}>
+                            <SelectTrigger><SelectValue placeholder="Filter by severity..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Severities</SelectItem>
+                                <SelectItem value="Critical">Critical</SelectItem>
+                                <SelectItem value="High">High</SelectItem>
+                                <SelectItem value="Medium">Medium</SelectItem>
+                                <SelectItem value="Low">Low</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <Select value={filters.ward} onValueChange={v => setFilters({...filters, ward: v})}>
+                            <SelectTrigger><SelectValue placeholder="Filter by ward..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Wards</SelectItem>
+                                {uniqueWards.map(ward => <SelectItem key={ward} value={ward}>{ward}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                         <Select value={filters.status} onValueChange={v => setFilters({...filters, status: v})}>
+                            <SelectTrigger><SelectValue placeholder="Filter by status..." /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Statuses</SelectItem>
+                                <SelectItem value="New">New</SelectItem>
+                                <SelectItem value="Acknowledged">Acknowledged</SelectItem>
+                                <SelectItem value="Resolved">Resolved</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
-            )}
-        </CardContent>
-      </Card>
-    </div>
-  );
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Severity</TableHead>
+                            <TableHead>Ward</TableHead>
+                            <TableHead>Description</TableHead>
+                            <TableHead>Timestamp</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Resolution Time</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {filteredAlerts.map(alert => (
+                            <TableRow key={alert.alertId}>
+                                <TableCell><SeverityBadge severity={alert.severity} /></TableCell>
+                                <TableCell className="font-medium">{alert.ward}</TableCell>
+                                <TableCell className="max-w-xs truncate">{alert.description}</TableCell>
+                                <TableCell>{new Date(alert.timestamp).toLocaleString()}</TableCell>
+                                <TableCell><StatusBadge status={alert.status} /></TableCell>
+                                <TableCell>
+                                    {alert.status === 'Resolved' && alert.resolutionTime !== null ? (
+                                        <div className="flex items-center gap-1 text-green-600 font-medium">
+                                            <CheckCircle className="h-4 w-4" />
+                                            {alert.resolutionTime} hrs
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-1 text-muted-foreground">
+                                            <Clock className="h-4 w-4" />
+                                            -
+                                        </div>
+                                    )}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    );
 }

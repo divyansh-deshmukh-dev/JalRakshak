@@ -7,21 +7,21 @@ interface StatusBadgeProps {
 
 const statusStyles: { [key: string]: string } = {
   // Water Quality
-  Safe: "bg-green-100 text-green-800 border-green-200",
-  Moderate: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  Unsafe: "bg-red-100 text-red-800 border-red-200",
+  Safe: "bg-green-100 text-green-800 border-green-200 hover:bg-green-100",
+  Moderate: "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100",
+  Unsafe: "bg-red-100 text-red-800 border-red-200 hover:bg-red-100",
   // Alerts
-  New: "bg-blue-100 text-blue-800 border-blue-200",
-  Acknowledged: "bg-purple-100 text-purple-800 border-purple-200",
-  Resolved: "bg-gray-100 text-gray-800 border-gray-200",
+  New: "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100",
+  Acknowledged: "bg-purple-100 text-purple-800 border-purple-200 hover:bg-purple-100",
+  Resolved: "bg-gray-200 text-gray-800 border-gray-300 hover:bg-gray-200",
   // Citizen Reports
-  Pending: "bg-orange-100 text-orange-800 border-orange-200",
-  Approved: "bg-green-100 text-green-800 border-green-200",
-  Rejected: "bg-red-100 text-red-800 border-red-200",
+  Pending: "bg-orange-100 text-orange-800 border-orange-200 hover:bg-orange-100",
+  Approved: "bg-green-100 text-green-800 border-green-200 hover:bg-green-100",
+  Rejected: "bg-red-100 text-red-800 border-red-200 hover:bg-red-100",
   // Infrastructure
-  Operational: "bg-green-100 text-green-800 border-green-200",
-  Maintenance: "bg-blue-100 text-blue-800 border-blue-200",
-  Risk: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  Operational: "bg-green-100 text-green-800 border-green-200 hover:bg-green-100",
+  Maintenance: "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100",
+  Risk: "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100",
 };
 
 export default function StatusBadge({ status }: StatusBadgeProps) {

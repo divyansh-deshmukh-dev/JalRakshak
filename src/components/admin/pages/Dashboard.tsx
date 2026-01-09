@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Droplet, Wind, AlertTriangle, MapPin, Activity } from 'lucide-react';
+import { Droplet, Wind, AlertTriangle, MapPin } from 'lucide-react';
 import mockData from '@/data/mockWaterData.json';
 import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/shared/StatusBadge";
 
 const { citySummary, alerts } = mockData;
 
@@ -17,19 +18,8 @@ const chartData24h = [
   { time: '6 PM', ph: 7.1, turbidity: 6.2 }, { time: '9 PM', ph: 7.0, turbidity: 5.9 },
 ];
 
-const chartData7d = [
-  { day: 'Mon', ph: 7.0, turbidity: 6.5 }, { day: 'Tue', ph: 7.2, turbidity: 6.1 },
-  { day: 'Wed', ph: 7.3, turbidity: 5.8 }, { day: 'Thu', ph: 7.1, turbidity: 6.2 },
-  { day: 'Fri', ph: 7.4, turbidity: 5.5 }, { day: 'Sat', ph: 7.5, turbidity: 5.3 },
-  { day: 'Sun', ph: 7.2, turbidity: 5.9 },
-];
+const chartData7d = mockData.trends.daily.map(d => ({ day: d.name, ph: d.ph, turbidity: d.turbidity }));
 
-const alertSeverityColors = {
-  Critical: "bg-red-500",
-  High: "bg-orange-500",
-  Medium: "bg-yellow-500",
-  Low: "bg-blue-500",
-};
 
 export default function AdminDashboardPage() {
   const recentAlerts = alerts.slice(0, 5);
@@ -90,21 +80,21 @@ export default function AdminDashboardPage() {
               <AreaChart data={chartData24h}>
                 <defs>
                   <linearGradient id="colorPh" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorTurbidity" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-chart-2)" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="var(--color-chart-2)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="time" />
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
-                <Tooltip />
-                <Area yAxisId="left" type="monotone" dataKey="ph" stroke="var(--color-chart-1)" fill="url(#colorPh)" />
-                <Area yAxisId="right" type="monotone" dataKey="turbidity" stroke="var(--color-chart-2)" fill="url(#colorTurbidity)" />
+                <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))'}} />
+                <Area yAxisId="left" type="monotone" dataKey="ph" stroke="hsl(var(--chart-1))" fill="url(#colorPh)" name="pH" />
+                <Area yAxisId="right" type="monotone" dataKey="turbidity" stroke="hsl(var(--chart-2))" fill="url(#colorTurbidity)" name="Turbidity" />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -117,13 +107,23 @@ export default function AdminDashboardPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
                <AreaChart data={chartData7d}>
+                 <defs>
+                  <linearGradient id="colorPh7d" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorTurbidity7d" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="day" />
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
-                <Tooltip />
-                <Area yAxisId="left" type="monotone" dataKey="ph" stroke="var(--color-chart-1)" fill="url(#colorPh)" />
-                <Area yAxisId="right" type="monotone" dataKey="turbidity" stroke="var(--color-chart-2)" fill="url(#colorTurbidity)" />
+                <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))'}} />
+                <Area yAxisId="left" type="monotone" dataKey="ph" stroke="hsl(var(--chart-1))" fill="url(#colorPh7d)" name="pH" />
+                <Area yAxisId="right" type="monotone" dataKey="turbidity" stroke="hsl(var(--chart-2))" fill="url(#colorTurbidity7d)" name="Turbidity" />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -150,12 +150,12 @@ export default function AdminDashboardPage() {
               {recentAlerts.map(alert => (
                 <TableRow key={alert.alertId}>
                   <TableCell>
-                    <Badge className={cn(alertSeverityColors[alert.severity as keyof typeof alertSeverityColors], "text-white")}>{alert.severity}</Badge>
+                    <StatusBadge status={alert.severity} />
                   </TableCell>
-                  <TableCell>{alert.ward}</TableCell>
+                  <TableCell className="font-medium">{alert.ward}</TableCell>
                   <TableCell>{alert.description}</TableCell>
                   <TableCell>{new Date(alert.timestamp).toLocaleString()}</TableCell>
-                  <TableCell>{alert.status}</TableCell>
+                  <TableCell><StatusBadge status={alert.status} /></TableCell>
                 </TableRow>
               ))}
             </TableBody>

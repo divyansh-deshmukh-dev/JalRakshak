@@ -47,14 +47,23 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    // Basic media query for sidebar
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const handleResize = () => setIsSidebarOpen(mediaQuery.matches);
+    handleResize(); // Set initial state
+    mediaQuery.addEventListener('change', handleResize);
+    return () => mediaQuery.removeEventListener('change', handleResize);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const loggedIn = localStorage.getItem('adminLoggedIn');
-      if (loggedIn !== 'true' && pathname !== '/admin/login') {
-        router.push('/admin/login');
+      if (loggedIn !== 'true') {
+        router.replace('/admin/login');
       } else {
         setIsCheckingAuth(false);
       }
@@ -65,84 +74,77 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (typeof window !== 'undefined') {
       localStorage.removeItem('adminLoggedIn');
     }
-    router.push('/admin/login');
+    router.replace('/admin/login');
   };
   
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
-
   if (isCheckingAuth) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return <div className="flex items-center justify-center min-h-screen bg-gray-100">Loading Admin Portal...</div>;
   }
 
   const NavLink = ({ item }: { item: typeof navItems[0]}) => (
     <Link
         href={item.href}
+        onClick={() => { if (window.innerWidth < 1024) setIsSidebarOpen(false) }}
         className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 hover:bg-gray-100",
-        pathname.startsWith(item.href) && "bg-gray-100 text-gray-900"
+        "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-primary hover:bg-primary/10",
+        pathname === item.href && "bg-primary/10 text-primary font-semibold"
         )}
     >
         <item.icon className="h-4 w-4" />
         {item.label}
     </Link>
   );
+  
+  const sidebarContent = (
+      <div className="flex h-full max-h-screen flex-col gap-2">
+        <div className="flex h-[60px] items-center border-b px-6">
+            <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold text-gray-800">
+            <Droplets className="h-6 w-6 text-primary" />
+            <span>JalSuraksha Admin</span>
+            </Link>
+        </div>
+        <div className="flex-1 overflow-auto py-2">
+            <nav className="grid items-start px-4 text-sm font-medium">
+            {navItems.map(item => <NavLink key={item.href} item={item} />)}
+            </nav>
+        </div>
+        </div>
+  );
 
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-      <div className={cn(
-          "hidden border-r bg-gray-50/40 lg:block",
-          !isSidebarOpen && "lg:hidden"
-        )}>
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-[60px] items-center border-b px-6">
-            <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold">
-              <Droplets className="h-6 w-6 text-primary" />
-              <span>JalSuraksha Admin</span>
-            </Link>
-          </div>
-          <div className="flex-1 overflow-auto py-2">
-            <nav className="grid items-start px-4 text-sm font-medium">
-              {navItems.map(item => <NavLink key={item.href} item={item} />)}
-            </nav>
-          </div>
-        </div>
+        {/* Desktop Sidebar */}
+      <div className="hidden border-r bg-gray-50/75 lg:block">
+        {sidebarContent}
       </div>
       
       <div className="flex flex-col">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-white px-6 sticky top-0 z-30">
-          <Button variant="outline" size="icon" className="lg:hidden" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          <Button variant="outline" size="icon" className="lg:hidden shrink-0" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
             <Menu className="h-6 w-6" />
           </Button>
 
           {/* Mobile Sidebar */}
-          {isSidebarOpen && (
-               <div className="fixed inset-0 z-40 flex lg:hidden">
-                    <div className="fixed inset-0 bg-black/25" onClick={() => setIsSidebarOpen(false)} />
-                    <div className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
-                        <div className="flex px-4 pt-5 pb-2">
-                            <Button variant="ghost" className="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400" onClick={() => setIsSidebarOpen(false)}>
-                                <X className="h-6 w-6" />
-                            </Button>
-                        </div>
-                         <div className="flex h-[60px] items-center border-b px-6">
-                            <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold">
+          <div className={cn("fixed inset-0 z-40 flex lg:hidden", !isSidebarOpen && "hidden")}>
+                <div className="fixed inset-0 bg-black/25" onClick={() => setIsSidebarOpen(false)} />
+                <div className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
+                    <div className="flex px-4 pt-5 pb-2 justify-between items-center">
+                         <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold text-gray-800">
                             <Droplets className="h-6 w-6 text-primary" />
-                            <span>JalSuraksha Admin</span>
-                            </Link>
-                        </div>
-                        <div className="flex-1 overflow-auto py-2">
-                            <nav className="grid items-start px-4 text-sm font-medium">
-                                {navItems.map(item => <NavLink key={item.href} item={item} />)}
-                            </nav>
-                        </div>
+                            <span>JalSuraksha</span>
+                        </Link>
+                        <Button variant="ghost" className="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400" onClick={() => setIsSidebarOpen(false)}>
+                            <X className="h-6 w-6" />
+                        </Button>
+                    </div>
+                    <div className="border-t border-gray-200 mt-2">
+                        {sidebarContent}
                     </div>
                 </div>
-          )}
+            </div>
           
           <div className="flex-1">
-            <h1 className="font-semibold text-lg">Indore Smart City</h1>
+            <h1 className="font-semibold text-lg text-gray-800">Indore Smart City Water Authority</h1>
           </div>
           
           <div className="flex items-center gap-4">
@@ -160,10 +162,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem disabled>Profile</DropdownMenuItem>
                 <DropdownMenuItem asChild>
                     <Link href="/admin/settings">Settings</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem disabled>Profile</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
@@ -174,7 +176,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-gray-50/40">
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-gray-50/75">
           {children}
         </main>
       </div>

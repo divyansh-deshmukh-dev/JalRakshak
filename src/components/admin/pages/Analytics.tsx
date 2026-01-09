@@ -9,16 +9,8 @@ import mockData from '@/data/mockWaterData.json';
 import StatusBadge from '@/components/shared/StatusBadge';
 
 const historicalData = {
-    ph: [
-        { month: 'Jan', avg: 7.1 }, { month: 'Feb', avg: 7.0 }, { month: 'Mar', avg: 6.9 },
-        { month: 'Apr', avg: 7.2 }, { month: 'May', avg: 7.4 }, { month: 'Jun', avg: 7.3 },
-        { month: 'Jul', avg: 7.1 },
-    ],
-    turbidity: [
-        { month: 'Jan', avg: 5.2 }, { month: 'Feb', avg: 5.5 }, { month: 'Mar', avg: 6.1 },
-        { month: 'Apr', avg: 5.8 }, { month: 'May', avg: 5.4 }, { month: 'Jun', avg: 6.3 },
-        { month: 'Jul', avg: 5.8 },
-    ],
+    ph: mockData.trends.monthly.map(d => ({ month: d.name, avg: d.ph })),
+    turbidity: mockData.trends.monthly.map(d => ({ month: d.name, avg: d.turbidity })),
 };
 
 const areaComparisonData = mockData.wards
@@ -67,9 +59,9 @@ export default function AnalyticsPage() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="month" />
                             <YAxis />
-                            <Tooltip />
+                            <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))'}} />
                             <Legend />
-                            <Bar dataKey="avg" fill="var(--color-chart-1)" name={`Average ${metricName}`} />
+                            <Bar dataKey="avg" fill="hsl(var(--chart-1))" name={`Average ${metricName}`} />
                         </BarChart>
                     </ResponsiveContainer>
                 </CardContent>
@@ -86,12 +78,12 @@ export default function AnalyticsPage() {
                             <BarChart data={areaComparisonData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="name" />
-                                <YAxis yAxisId="left" orientation="left" stroke="var(--color-chart-1)" />
-                                <YAxis yAxisId="right" orientation="right" stroke="var(--color-chart-2)" />
-                                <Tooltip />
+                                <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" />
+                                <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" />
+                                <Tooltip cursor={{fill: 'hsl(var(--muted))'}} contentStyle={{backgroundColor: 'hsl(var(--card))'}} />
                                 <Legend />
-                                <Bar yAxisId="left" dataKey="ph" fill="var(--color-chart-1)" name="pH" />
-                                <Bar yAxisId="right" dataKey="turbidity" fill="var(--color-chart-2)" name="Turbidity" />
+                                <Bar yAxisId="left" dataKey="ph" fill="hsl(var(--chart-1))" name="pH" />
+                                <Bar yAxisId="right" dataKey="turbidity" fill="hsl(var(--chart-2))" name="Turbidity" />
                             </BarChart>
                         </ResponsiveContainer>
                     </CardContent>
@@ -113,9 +105,9 @@ export default function AnalyticsPage() {
                             <TableBody>
                                 {recurringZones.slice(0, 5).map(zone => (
                                     <TableRow key={zone.id}>
-                                        <TableCell>{zone.name}</TableCell>
+                                        <TableCell className="font-medium">{zone.name}</TableCell>
                                         <TableCell><StatusBadge status={zone.status} /></TableCell>
-                                        <TableCell className="text-right">{zone.incidentCount}</TableCell>
+                                        <TableCell className="text-right font-mono">{zone.incidentCount}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

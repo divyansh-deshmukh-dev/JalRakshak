@@ -1,106 +1,137 @@
 "use client";
 
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { MapPin, X, Droplet, Wind, Shield } from 'lucide-react';
+import Image from 'next/image';
 import mockData from '@/data/mockWaterData.json';
-import Image from "next/image";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Droplet, Wind, MapPin } from "lucide-react";
+import { cn } from '@/lib/utils';
+import StatusBadge from '@/components/shared/StatusBadge';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 type Ward = typeof mockData.wards[0];
+type ViewMode = 'risk' | 'ph' | 'turbidity';
 
-const statusColors = {
-  Safe: "bg-green-500",
-  Moderate: "bg-yellow-500",
-  Unsafe: "bg-red-500",
+const getStatusColor = (ward: Ward, mode: ViewMode): string => {
+  let value: number;
+  let thresholds: { moderate: number, unsafe: number };
+
+  switch (mode) {
+    case 'ph':
+      value = ward.ph;
+      thresholds = { moderate: 7.8, unsafe: 8.5 }; // Example: high pH is bad
+       if (value < 6.5) return "bg-red-500";
+       if (value < 7.0) return "bg-yellow-500";
+      return "bg-green-500";
+    case 'turbidity':
+      value = ward.turbidity;
+      thresholds = { moderate: 5, unsafe: 8 };
+      if (value > thresholds.unsafe) return "bg-red-500";
+      if (value > thresholds.moderate) return "bg-yellow-500";
+      return "bg-green-500";
+    case 'risk':
+    default:
+      value = ward.riskScore;
+      thresholds = { moderate: 50, unsafe: 80 };
+      if (value > thresholds.unsafe) return "bg-red-500";
+      if (value > thresholds.moderate) return "bg-yellow-500";
+      return "bg-green-500";
+  }
 };
 
-export default function WardMapPage() {
-  const [selectedWard, setSelectedWard] = useState<Ward | null>(mockData.wards[0]);
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Indore Water Quality Map</CardTitle>
-            <CardDescription>Click on a ward to see detailed information.</CardDescription>
+export default function WardMapPage() {
+    const [selectedWard, setSelectedWard] = useState<Ward | null>(null);
+    const [viewMode, setViewMode] = useState<ViewMode>('risk');
+
+    return (
+      <Card className="h-full">
+        <Drawer open={!!selectedWard} onOpenChange={(isOpen) => !isOpen && setSelectedWard(null)}>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Interactive Ward Map</CardTitle>
+              <CardDescription>Visualize water quality data across Indore.</CardDescription>
+            </div>
+            <RadioGroup defaultValue="risk" onValueChange={(value: string) => setViewMode(value as ViewMode)} className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="risk" id="risk" />
+                <Label htmlFor="risk">Combined Risk</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="ph" id="ph" />
+                <Label htmlFor="ph">pH Level</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="turbidity" id="turbidity" />
+                <Label htmlFor="turbidity">Turbidity</Label>
+              </div>
+            </RadioGroup>
           </CardHeader>
           <CardContent>
-            <div className="relative aspect-video w-full bg-gray-200 rounded-md overflow-hidden">
-                <Image src="https://picsum.photos/seed/indoremaplarge/1200/675" alt="Indore map" layout="fill" objectFit="cover" data-ai-hint="city map gis" />
-                 {/* Mock ward pins */}
-                {mockData.wards.map((ward, index) => (
-                    <div 
-                        key={ward.id}
-                        className={cn(
-                            "absolute w-4 h-4 rounded-full cursor-pointer transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center",
-                            statusColors[ward.status as keyof typeof statusColors],
-                            selectedWard?.id === ward.id ? 'ring-2 ring-blue-500 ring-offset-2' : ''
-                        )}
-                        style={{ top: `${(index * 5 + 10)}%`, left: `${(index * 5 + 10)}%`}}
-                        onClick={() => setSelectedWard(ward)}
-                        title={ward.name}
-                    >
-                         <MapPin className="h-3 w-3 text-white"/>
-                    </div>
-                ))}
+            <div className="relative aspect-[16/10] w-full bg-gray-200 rounded-md overflow-hidden">
+              <Image src="https://images.unsplash.com/photo-1712697235813-67e2567b3eed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMG1hcCUyMHdhdGVyfGVufDB8fHx8MTc2Nzk4MzI5OXww&ixlib=rb-4.1.0&q=80&w=1080" alt="Indore Map" layout="fill" objectFit="cover" data-ai-hint="city map water" />
+              {mockData.wards.map((ward, index) => (
+                <div
+                  key={ward.id}
+                  className={cn(
+                    "absolute w-3 h-3 rounded-full cursor-pointer transform -translate-x-1/2 -translate-y-1/2 border-2 border-white/50 transition-colors duration-300 hover:scale-150 hover:border-white",
+                    getStatusColor(ward, viewMode)
+                  )}
+                  style={{ top: `${(index * 6 + 15)}%`, left: `${(index * 4 + 20)}%` }}
+                  onClick={() => setSelectedWard(ward)}
+                  title={ward.name}
+                />
+              ))}
             </div>
           </CardContent>
-        </Card>
-      </div>
-      
-      <div className="space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Ward Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {selectedWard ? (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-semibold">{selectedWard.name}</h3>
-                    <Badge className={cn(statusColors[selectedWard.status as keyof typeof statusColors], "text-white")}>{selectedWard.status}</Badge>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground flex items-center gap-2"><Droplet size={16}/> pH Level</span>
-                  <span>{selectedWard.ph}</span>
-                </div>
-                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground flex items-center gap-2"><Wind size={16}/> Turbidity</span>
-                  <span>{selectedWard.turbidity} NTU</span>
-                </div>
-                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Temperature</span>
-                  <span>{selectedWard.temp}°C</span>
-                </div>
-                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">TDS</span>
-                  <span>{selectedWard.tds} ppm</span>
-                </div>
-              </div>
-            ) : (
-              <p className="text-muted-foreground">Select a ward on the map to view details.</p>
-            )}
-          </CardContent>
-        </Card>
-         <Card>
-            <CardHeader>
-                <CardTitle>All Wards Status</CardTitle>
-            </CardHeader>
-            <CardContent className="max-h-96 overflow-y-auto">
-                <ul className="space-y-2">
-                    {mockData.wards.map(ward => (
-                        <li key={ward.id} className="flex justify-between items-center p-2 rounded-md hover:bg-gray-100 cursor-pointer" onClick={() => setSelectedWard(ward)}>
-                            <span className="font-medium text-sm">{ward.name}</span>
-                            <Badge className={cn(statusColors[ward.status as keyof typeof statusColors], "text-white")}>{ward.status}</Badge>
-                        </li>
-                    ))}
-                </ul>
-            </CardContent>
-         </Card>
-      </div>
-    </div>
-  );
+          <DrawerContent>
+            <div className="mx-auto w-full max-w-2xl">
+              {selectedWard && (
+                <>
+                  <DrawerHeader>
+                    <DrawerTitle className="flex items-center gap-2 text-2xl">
+                      <MapPin className="h-6 w-6 text-primary" /> {selectedWard.name}
+                    </DrawerTitle>
+                    <DrawerDescription>Detailed water quality analytics for this ward.</DrawerDescription>
+                  </DrawerHeader>
+                  <div className="p-4 pb-0">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <Card>
+                        <CardHeader className="pb-2">
+                          <CardDescription className="flex items-center gap-1"><Shield className="h-4 w-4"/> Status</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <StatusBadge status={selectedWard.status} />
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader className="pb-2">
+                          <CardDescription className="flex items-center gap-1"><Droplet className="h-4 w-4"/> pH Level</CardDescription>
+                        </CardHeader>
+                        <CardContent><p className="text-2xl font-bold">{selectedWard.ph}</p></CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader className="pb-2">
+                          <CardDescription className="flex items-center gap-1"><Wind className="h-4 w-4"/> Turbidity</CardDescription>
+                        </CardHeader>
+                        <CardContent><p className="text-2xl font-bold">{selectedWard.turbidity} <span className="text-sm text-muted-foreground">NTU</span></p></CardContent>
+                      </Card>
+                       <Card>
+                        <CardHeader className="pb-2">
+                          <CardDescription className="flex items-center gap-1"><AlertTriangle className="h-4 w-4"/> Risk Score</CardDescription>
+                        </CardHeader>
+                        <CardContent><p className="text-2xl font-bold">{selectedWard.riskScore}/100</p></CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </Card>
+    );
 }

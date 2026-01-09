@@ -1,51 +1,55 @@
 {
   "citySummary": {
-    "avgPh": 7.1,
-    "avgTurbidity": 5.8,
-    "activeAlerts": 12,
-    "unsafeZonesCount": 4,
-    "systemHealth": "Operational"
+    "avgPh": 7.3,
+    "avgTurbidity": 4.8,
+    "activeAlerts": 5,
+    "unsafeZonesCount": 3,
+    "systemHealth": "Operational",
+    "aiCleanlinessScore": 88.5
   },
   "wards": [
-    { "id": "ward001", "name": "Sudama Nagar", "status": "Safe", "ph": 7.5, "turbidity": 3.2, "temp": 25, "tds": 280 },
-    { "id": "ward002", "name": "Rajendra Nagar", "status": "Moderate", "ph": 6.8, "turbidity": 6.1, "temp": 26, "tds": 450 },
-    { "id": "ward003", "name": "Rau", "status": "Safe", "ph": 7.1, "turbidity": 4.5, "temp": 25, "tds": 320 },
-    { "id": "ward004", "name": "Annapurna", "status": "Unsafe", "ph": 8.5, "turbidity": 10.3, "temp": 28, "tds": 700 },
-    { "id": "ward005", "name": "Chhatribagh", "status": "Safe", "ph": 7.3, "turbidity": 2.8, "temp": 24, "tds": 250 },
-    { "id": "ward006", "name": "Dravid Nagar", "status": "Moderate", "ph": 7.8, "turbidity": 5.5, "temp": 26, "tds": 400 },
-    { "id": "ward007", "name": "Lokmanya Nagar", "status": "Safe", "ph": 7.0, "turbidity": 4.0, "temp": 25, "tds": 300 },
-    { "id": "ward008", "name": "Goma Ki Phel", "status": "Unsafe", "ph": 6.5, "turbidity": 8.9, "temp": 27, "tds": 650 },
-    { "id": "ward009", "name": "Sukhliya", "status": "Moderate", "ph": 6.9, "turbidity": 7.2, "temp": 26, "tds": 500 },
-    { "id": "ward010", "name": "Vijay Nagar", "status": "Safe", "ph": 7.4, "turbidity": 3.5, "temp": 25, "tds": 290 },
-    { "id": "ward011", "name": "Palasia", "status": "Safe", "ph": 7.2, "turbidity": 3.8, "temp": 25, "tds": 310 },
-    { "id": "ward012", "name": "Old Palasia", "status": "Moderate", "ph": 7.0, "turbidity": 5.9, "temp": 26, "tds": 420 },
-    { "id": "ward013", "name": "Tilak Nagar", "status": "Safe", "ph": 7.6, "turbidity": 2.5, "temp": 24, "tds": 240 },
-    { "id": "ward014", "name": "Manik Bagh", "status": "Unsafe", "ph": 6.7, "turbidity": 9.5, "temp": 28, "tds": 680 },
-    { "id": "ward015", "name": "Pipliyahana", "status": "Safe", "ph": 7.3, "turbidity": 4.1, "temp": 25, "tds": 330 }
+    { "id": "ward001", "name": "Sudama Nagar", "status": "Safe", "ph": 7.5, "turbidity": 3.2, "temp": 25, "tds": 280, "riskScore": 15 },
+    { "id": "ward002", "name": "Rajendra Nagar", "status": "Moderate", "ph": 6.8, "turbidity": 6.1, "temp": 26, "tds": 450, "riskScore": 68 },
+    { "id": "ward003", "name": "Rau", "status": "Safe", "ph": 7.1, "turbidity": 4.5, "temp": 25, "tds": 320, "riskScore": 25 },
+    { "id": "ward004", "name": "Annapurna", "status": "Unsafe", "ph": 8.5, "turbidity": 10.3, "temp": 28, "tds": 700, "riskScore": 92 },
+    { "id": "ward005", "name": "Chhatribagh", "status": "Safe", "ph": 7.3, "turbidity": 2.8, "temp": 24, "tds": 250, "riskScore": 12 },
+    { "id": "ward006", "name": "Dravid Nagar", "status": "Moderate", "ph": 7.8, "turbidity": 5.5, "temp": 26, "tds": 400, "riskScore": 55 },
+    { "id": "ward007", "name": "Lokmanya Nagar", "status": "Safe", "ph": 7.0, "turbidity": 4.0, "temp": 25, "tds": 300, "riskScore": 20 },
+    { "id": "ward008", "name": "Goma Ki Phel", "status": "Unsafe", "ph": 6.5, "turbidity": 8.9, "temp": 27, "tds": 650, "riskScore": 88 },
+    { "id": "ward009", "name": "Sukhliya", "status": "Moderate", "ph": 6.9, "turbidity": 7.2, "temp": 26, "tds": 500, "riskScore": 75 },
+    { "id": "ward010", "name": "Vijay Nagar", "status": "Safe", "ph": 7.4, "turbidity": 3.5, "temp": 25, "tds": 290, "riskScore": 18 },
+    { "id": "ward011", "name": "Palasia", "status": "Safe", "ph": 7.2, "turbidity": 3.8, "temp": 25, "tds": 310, "riskScore": 22 },
+    { "id": "ward012", "name": "Old Palasia", "status": "Moderate", "ph": 7.0, "turbidity": 5.9, "temp": 26, "tds": 420, "riskScore": 60 },
+    { "id": "ward013", "name": "Tilak Nagar", "status": "Safe", "ph": 7.6, "turbidity": 2.5, "temp": 24, "tds": 240, "riskScore": 10 },
+    { "id": "ward014", "name": "Manik Bagh", "status": "Unsafe", "ph": 6.7, "turbidity": 9.5, "temp": 28, "tds": 680, "riskScore": 95 },
+    { "id": "ward015", "name": "Pipliyahana", "status": "Safe", "ph": 7.3, "turbidity": 4.1, "temp": 25, "tds": 330, "riskScore": 28 }
   ],
   "sensors": [
     {"sensorId": "SN-PH-01", "location": "Sudama Nagar", "ph": 7.5, "turbidity": 3.1, "temp": 25.1, "status": "Safe", "timestamp": "2024-07-30T10:00:00Z"},
     {"sensorId": "RN-TB-03", "location": "Rajendra Nagar", "ph": 6.8, "turbidity": 6.2, "temp": 26.3, "status": "Moderate", "timestamp": "2024-07-30T10:01:00Z"},
     {"sensorId": "AN-PH-02", "location": "Annapurna", "ph": 8.6, "turbidity": 10.5, "temp": 28.0, "status": "Unsafe", "timestamp": "2024-07-30T10:02:00Z"},
     {"sensorId": "VN-TM-01", "location": "Vijay Nagar", "ph": 7.4, "turbidity": 3.4, "temp": 25.5, "status": "Safe", "timestamp": "2024-07-30T09:59:00Z"},
-    {"sensorId": "GP-ALL-01", "location": "Goma Ki Phel", "ph": 6.4, "turbidity": 9.1, "temp": 27.2, "status": "Unsafe", "timestamp": "2024-07-30T10:03:00Z"}
+    {"sensorId": "GP-ALL-01", "location": "Goma Ki Phel", "ph": 6.4, "turbidity": 9.1, "temp": 27.2, "status": "Unsafe", "timestamp": "2024-07-30T10:03:00Z"},
+    {"sensorId": "SK-ALL-02", "location": "Sukhliya", "ph": 6.9, "turbidity": 7.2, "temp": 26.1, "status": "Moderate", "timestamp": "2024-07-30T10:04:00Z"}
   ],
   "alerts": [
-    {"alertId": "A001", "severity": "Critical", "ward": "Annapurna", "description": "pH level dangerously high (8.6). Potential industrial contamination.", "timestamp": "2024-07-30T08:30:00Z", "status": "New"},
-    {"alertId": "A002", "severity": "High", "ward": "Goma Ki Phel", "description": "High turbidity (9.1 NTU) detected.", "timestamp": "2024-07-30T08:45:00Z", "status": "New"},
-    {"alertId": "A003", "severity": "Medium", "ward": "Rajendra Nagar", "description": "Turbidity exceeds moderate threshold.", "timestamp": "2024-07-29T15:00:00Z", "status": "Acknowledged"},
-    {"alertId": "A004", "severity": "Low", "ward": "Old Palasia", "description": "Slightly elevated turbidity detected.", "timestamp": "2024-07-28T10:00:00Z", "status": "Resolved"}
+    {"alertId": "A001", "severity": "Critical", "ward": "Annapurna", "description": "pH level dangerously high (8.6). Potential industrial contamination.", "timestamp": "2024-07-30T08:30:00Z", "status": "New", "resolutionTime": null},
+    {"alertId": "A002", "severity": "High", "ward": "Goma Ki Phel", "description": "High turbidity (9.1 NTU) detected.", "timestamp": "2024-07-30T08:45:00Z", "status": "New", "resolutionTime": null},
+    {"alertId": "A003", "severity": "Medium", "ward": "Rajendra Nagar", "description": "Turbidity exceeds moderate threshold.", "timestamp": "2024-07-29T15:00:00Z", "status": "Acknowledged", "resolutionTime": null},
+    {"alertId": "A004", "severity": "Low", "ward": "Old Palasia", "description": "Slightly elevated turbidity detected.", "timestamp": "2024-07-28T10:00:00Z", "status": "Resolved", "resolutionTime": "2024-07-28T18:00:00Z"},
+    {"alertId": "A005", "severity": "Critical", "ward": "Manik Bagh", "description": "Multiple parameters out of range. Investigate immediately.", "timestamp": "2024-07-30T11:00:00Z", "status": "New", "resolutionTime": null}
   ],
   "citizenReports": [
     {"reportId": "CR001", "ward": "Annapurna", "timestamp": "2024-07-29T18:00:00Z", "imageUrl": "https://picsum.photos/seed/report1/400/300", "imageHint": "dirty water", "description": "Water from my tap is brown and smells bad.", "aiScore": 0.15, "status": "Pending"},
     {"reportId": "CR002", "ward": "Vijay Nagar", "timestamp": "2024-07-29T12:00:00Z", "imageUrl": "https://picsum.photos/seed/report2/400/300", "imageHint": "clear water", "description": "Water looks clean, no issues.", "aiScore": 0.95, "status": "Approved"},
-    {"reportId": "CR003", "ward": "Goma Ki Phel", "timestamp": "2024-07-30T09:00:00Z", "imageUrl": "https://picsum.photos/seed/report3/400/300", "imageHint": "cloudy water", "description": "Water is cloudy today.", "aiScore": 0.40, "status": "Pending"}
+    {"reportId": "CR003", "ward": "Goma Ki Phel", "timestamp": "2024-07-30T09:00:00Z", "imageUrl": "https://picsum.photos/seed/report3/400/300", "imageHint": "cloudy water", "description": "Water is cloudy today.", "aiScore": 0.40, "status": "Pending"},
+    {"reportId": "CR004", "ward": "Sudama Nagar", "timestamp": "2024-07-28T14:20:00Z", "imageUrl": "https://picsum.photos/seed/report4/400/300", "imageHint": "particles water", "description": "Seeing some small particles in the glass.", "aiScore": 0.65, "status": "Rejected"}
   ],
   "infrastructure": {
     "tanks": [
-      {"tankId": "TNK-SN-01", "location": "Sudama Nagar", "capacity": 500000, "level": 0.85, "status": "Operational"},
-      {"tankId": "TNK-AN-01", "location": "Annapurna", "capacity": 750000, "level": 0.92, "status": "Risk"},
-      {"tankId": "TNK-VN-01", "location": "Vijay Nagar", "capacity": 1000000, "level": 0.70, "status": "Maintenance"}
+      {"tankId": "TNK-SN-01", "location": "Sudama Nagar", "capacity": 500000, "level": 0.85, "status": "Operational", "lastMaintenance": "2024-05-15", "supplySource": "Narmada River"},
+      {"tankId": "TNK-AN-01", "location": "Annapurna", "capacity": 750000, "level": 0.92, "status": "Risk", "lastMaintenance": "2023-11-20", "supplySource": "Yashwant Sagar Dam"},
+      {"tankId": "TNK-VN-01", "location": "Vijay Nagar", "capacity": 1000000, "level": 0.70, "status": "Maintenance", "lastMaintenance": "2024-07-25", "supplySource": "Narmada River"}
     ],
     "pipelines": [
       {"pipelineId": "PL-SN-RN-01", "from": "Sudama Nagar", "to": "Rajendra Nagar", "status": "Operational"},
@@ -57,5 +61,31 @@
       "ph": { "min": 6.5, "max": 8.5 },
       "turbidity": { "max": 5.0 }
     }
+  },
+  "trends": {
+    "daily": [
+      { "name": "Day -6", "ph": 7.1, "turbidity": 5.8 },
+      { "name": "Day -5", "ph": 7.0, "turbidity": 6.1 },
+      { "name": "Day -4", "ph": 7.2, "turbidity": 5.9 },
+      { "name": "Day -3", "ph": 7.3, "turbidity": 5.5 },
+      { "name": "Day -2", "ph": 7.1, "turbidity": 5.7 },
+      { "name": "Day -1", "ph": 7.4, "turbidity": 5.2 },
+      { "name": "Today", "ph": 7.2, "turbidity": 5.4 }
+    ],
+    "daily30": [
+      {"name":"1","ph":7.2,"turbidity":5.1},{"name":"2","ph":7.3,"turbidity":5.3},{"name":"3","ph":7.1,"turbidity":5.5},{"name":"4","ph":7.4,"turbidity":5.0},{"name":"5","ph":7.2,"turbidity":5.2},{"name":"6","ph":7.3,"turbidity":5.4},{"name":"7","ph":7.1,"turbidity":5.6},{"name":"8","ph":7.5,"turbidity":4.9},{"name":"9","ph":7.2,"turbidity":5.3},{"name":"10","ph":7.3,"turbidity":5.5},{"name":"11","ph":7.0,"turbidity":5.8},{"name":"12","ph":7.4,"turbidity":5.1},{"name":"13","ph":7.2,"turbidity":5.4},{"name":"14","ph":7.3,"turbidity":5.6},{"name":"15","ph":7.1,"turbidity":5.9},{"name":"16","ph":7.6,"turbidity":4.8},{"name":"17","ph":7.2,"turbidity":5.5},{"name":"18","ph":7.3,"turbidity":5.7},{"name":"19","ph":7.1,"turbidity":6.0},{"name":"20","ph":7.4,"turbidity":5.2},{"name":"21","ph":7.2,"turbidity":5.6},{"name":"22","ph":7.3,"turbidity":5.8},{"name":"23","ph":7.0,"turbidity":6.2},{"name":"24","ph":7.5,"turbidity":5.0},{"name":"25","ph":7.2,"turbidity":5.7},{"name":"26","ph":7.3,"turbidity":5.9},{"name":"27","ph":7.1,"turbidity":6.1},{"name":"28","ph":7.4,"turbidity":5.3},{"name":"29","ph":7.2,"turbidity":5.8},{"name":"30","ph":7.3,"turbidity":4.8}
+    ],
+    "monthly": [
+      { "name": "Jan", "ph": 7.1, "turbidity": 5.2 }, { "name": "Feb", "ph": 7.0, "turbidity": 5.5 }, 
+      { "name": "Mar", "ph": 6.9, "turbidity": 6.1 }, { "name": "Apr", "ph": 7.2, "turbidity": 5.8 }, 
+      { "name": "May", "ph": 7.4, "turbidity": 5.4 }, { "name": "Jun", "ph": 7.3, "turbidity": 6.3 },
+      { "name": "Jul", "ph": 7.2, "turbidity": 5.9 }
+    ],
+    "seasonal": [
+      {"name": "Winter", "ph": 7.2, "turbidity": 4.5},
+      {"name": "Summer", "ph": 7.5, "turbidity": 5.5},
+      {"name": "Monsoon", "ph": 6.8, "turbidity": 7.2},
+      {"name": "Post-Monsoon", "ph": 7.0, "turbidity": 6.1}
+    ]
   }
 }

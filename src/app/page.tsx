@@ -1,5 +1,5 @@
-import PublicHomePage from '@/components/public/pages/Home';
+import PublicOverviewPage from '@/components/public/pages/Overview';
 
 export default function Home() {
-  return <PublicHomePage />;
+  return <PublicOverviewPage />;
 }
