@@ -17,7 +17,11 @@ import {
   Droplets,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -51,66 +55,63 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     </Link>
   );
 
-  const sidebarContent = (
-    <div className="flex h-full flex-col gap-2">
-      <div className="flex h-16 items-center border-b px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-gray-800">
-          <Droplets className="h-6 w-6 text-primary" />
-          <span>JalSuraksha Indore</span>
-        </Link>
-      </div>
-      <div className="flex-1 overflow-auto py-2">
-        <nav className="grid items-start px-4 text-sm font-medium">
-          {publicNavItems.map((item) => (
-            <NavLink key={item.href} item={item} />
-          ))}
-        </nav>
-      </div>
-    </div>
-  );
-
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-gray-50/75 lg:block">
-        {sidebarContent}
+        <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+            <Link href="/" className="flex items-center gap-2 font-semibold">
+              <Droplets className="h-6 w-6 text-primary" />
+              <span className="">JalSuraksha Indore</span>
+            </Link>
+          </div>
+          <div className="flex-1">
+            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+              {publicNavItems.map((item) => (
+                <NavLink key={item.href} item={item} />
+              ))}
+            </nav>
+          </div>
+        </div>
       </div>
       <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-white px-6 sticky top-0 z-30 lg:h-16">
+        <header className="flex h-14 items-center gap-4 border-b bg-white px-4 lg:h-[60px] lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden shrink-0">
-                <Menu className="h-6 w-6" />
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 lg:hidden"
+              >
+                <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col p-0 w-[280px]">
-                <div className="flex h-16 items-center border-b px-6">
-                    <Link href="/" className="flex items-center gap-2 font-semibold text-gray-800">
-                    <Droplets className="h-6 w-6 text-primary" />
-                    <span>JalSuraksha Indore</span>
-                    </Link>
-                </div>
-                <div className="flex-1 overflow-auto py-2">
-                    <nav className="grid items-start px-4 text-sm font-medium">
-                    {publicNavItems.map((item) => (
-                         <SheetTrigger asChild key={item.href}>
-                            <NavLink item={item} />
-                         </SheetTrigger>
-                    ))}
-                    </nav>
-                </div>
+            <SheetContent side="left" className="flex flex-col p-0">
+               <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                <Link href="/" className="flex items-center gap-2 font-semibold">
+                  <Droplets className="h-6 w-6 text-primary" />
+                  <span className="">JalSuraksha Indore</span>
+                </Link>
+              </div>
+              <nav className="grid gap-2 text-lg font-medium p-4">
+                 {publicNavItems.map((item) => (
+                    <SheetTrigger key={item.href} asChild>
+                        <NavLink item={item} />
+                    </SheetTrigger>
+                ))}
+              </nav>
             </SheetContent>
           </Sheet>
 
-          <div className="flex-1">
-            <h1 className="font-semibold text-lg text-gray-800">Indore Smart City Water Authority</h1>
+          <div className="w-full flex-1">
+             <h1 className="font-semibold text-lg text-gray-800">Indore Smart City Water Authority</h1>
           </div>
           <Link href="/admin/login">
             <Button variant="outline">Admin Portal</Button>
           </Link>
         </header>
-
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-gray-50/75">
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-gray-50/75">
           {children}
         </main>
       </div>
