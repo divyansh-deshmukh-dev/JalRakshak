@@ -1,4 +1,4 @@
-import PublicHomePage from '@/components/public/home';
+import PublicHomePage from '@/components/public/pages/Home';
 
 export default function Home() {
   return <PublicHomePage />;
