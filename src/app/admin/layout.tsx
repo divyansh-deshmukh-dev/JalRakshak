@@ -61,12 +61,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Skip auth check for login page
+      if (pathname === '/admin/login') {
+        setIsCheckingAuth(false);
+        return;
+      }
+      
       const loggedIn = localStorage.getItem('adminLoggedIn');
       if (loggedIn !== 'true') {
         router.replace('/admin/login');
-      } else {
-        setIsCheckingAuth(false);
+        return;
       }
+      setIsCheckingAuth(false);
     }
   }, [router, pathname]);
 
@@ -79,6 +85,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   
   if (isCheckingAuth) {
     return <div className="flex items-center justify-center min-h-screen bg-gray-100">Loading Admin Portal...</div>;
+  }
+
+  // Don't show admin layout for login page
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
   }
 
   const NavLink = ({ item }: { item: typeof navItems[0]}) => (
@@ -151,6 +162,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="flex items-center gap-2 text-sm font-medium text-green-600">
                 <Dot className="h-6 w-6 animate-pulse" /> System Status: {mockData.citySummary.systemHealth}
             </div>
+
+            <Link href="/">
+              <Button variant="outline">Citizen Portal</Button>
+            </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
