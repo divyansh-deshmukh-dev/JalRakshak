@@ -14,7 +14,6 @@ import {
   GitCompare,
   BookOpen,
   Menu,
-  X,
   Droplets,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -87,7 +86,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col p-0">
+            <SheetContent side="left" className="flex flex-col p-0 w-[280px]">
               {sidebarContent(true)}
             </SheetContent>
           </Sheet>

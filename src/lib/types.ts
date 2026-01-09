@@ -40,6 +40,7 @@ export type CitySummary = {
   activeAlerts: number;
   unsafeZonesCount: number;
   systemHealth: string;
+  aiCleanlinessScore: number;
 };
 
 export type Ward = {
@@ -50,6 +51,7 @@ export type Ward = {
   turbidity: number;
   temp: number;
   tds: number;
+  riskScore: number;
 };
 
 export type Sensor = {
@@ -69,6 +71,7 @@ export type Alert = {
   description: string;
   timestamp: string;
   status: 'New' | 'Acknowledged' | 'Resolved';
+  resolutionTime: string | null;
 };
 
 export type CitizenReport = {
@@ -88,6 +91,8 @@ export type WaterTank = {
   capacity: number;
   level: number;
   status: 'Operational' | 'Risk' | 'Maintenance';
+  lastMaintenance: string;
+  supplySource: string;
 };
 
 export type Pipeline = {

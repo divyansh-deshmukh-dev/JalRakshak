@@ -1,137 +1,170 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, X, Droplet, Wind, Shield } from 'lucide-react';
-import Image from 'next/image';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
+import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { Layers, MapPin, Shield, ShieldAlert, ShieldCheck } from 'lucide-react';
 import mockData from '@/data/mockWaterData.json';
 import { cn } from '@/lib/utils';
 import StatusBadge from '@/components/shared/StatusBadge';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 
 type Ward = typeof mockData.wards[0];
-type ViewMode = 'risk' | 'ph' | 'turbidity';
 
-const getStatusColor = (ward: Ward, mode: ViewMode): string => {
-  let value: number;
-  let thresholds: { moderate: number, unsafe: number };
-
-  switch (mode) {
-    case 'ph':
-      value = ward.ph;
-      thresholds = { moderate: 7.8, unsafe: 8.5 }; // Example: high pH is bad
-       if (value < 6.5) return "bg-red-500";
-       if (value < 7.0) return "bg-yellow-500";
-      return "bg-green-500";
-    case 'turbidity':
-      value = ward.turbidity;
-      thresholds = { moderate: 5, unsafe: 8 };
-      if (value > thresholds.unsafe) return "bg-red-500";
-      if (value > thresholds.moderate) return "bg-yellow-500";
-      return "bg-green-500";
-    case 'risk':
-    default:
-      value = ward.riskScore;
-      thresholds = { moderate: 50, unsafe: 80 };
-      if (value > thresholds.unsafe) return "bg-red-500";
-      if (value > thresholds.moderate) return "bg-yellow-500";
-      return "bg-green-500";
-  }
+const riskColors = {
+  Safe: "bg-green-500/80 border-green-700",
+  Moderate: "bg-yellow-500/80 border-yellow-700",
+  Unsafe: "bg-red-500/80 border-red-700",
 };
 
+const layerIcons = {
+  Safe: <ShieldCheck className="h-4 w-4 text-green-600" />,
+  Moderate: <ShieldAlert className="h-4 w-4 text-yellow-600" />,
+  Unsafe: <Shield className="h-4 w-4 text-red-600" />,
+};
 
 export default function WardMapPage() {
-    const [selectedWard, setSelectedWard] = useState<Ward | null>(null);
-    const [viewMode, setViewMode] = useState<ViewMode>('risk');
+  const [layers, setLayers] = useState({ safe: true, risk: true, complaints: false });
+  const [selectedWard, setSelectedWard] = useState<Ward | null>(null);
 
-    return (
-      <Card className="h-full">
-        <Drawer open={!!selectedWard} onOpenChange={(isOpen) => !isOpen && setSelectedWard(null)}>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Interactive Ward Map</CardTitle>
-              <CardDescription>Visualize water quality data across Indore.</CardDescription>
-            </div>
-            <RadioGroup defaultValue="risk" onValueChange={(value: string) => setViewMode(value as ViewMode)} className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="risk" id="risk" />
-                <Label htmlFor="risk">Combined Risk</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="ph" id="ph" />
-                <Label htmlFor="ph">pH Level</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="turbidity" id="turbidity" />
-                <Label htmlFor="turbidity">Turbidity</Label>
-              </div>
-            </RadioGroup>
-          </CardHeader>
-          <CardContent>
-            <div className="relative aspect-[16/10] w-full bg-gray-200 rounded-md overflow-hidden">
-              <Image src="https://images.unsplash.com/photo-1712697235813-67e2567b3eed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMG1hcCUyMHdhdGVyfGVufDB8fHx8MTc2Nzk4MzI5OXww&ixlib=rb-4.1.0&q=80&w=1080" alt="Indore Map" layout="fill" objectFit="cover" data-ai-hint="city map water" />
-              {mockData.wards.map((ward, index) => (
-                <div
-                  key={ward.id}
-                  className={cn(
-                    "absolute w-3 h-3 rounded-full cursor-pointer transform -translate-x-1/2 -translate-y-1/2 border-2 border-white/50 transition-colors duration-300 hover:scale-150 hover:border-white",
-                    getStatusColor(ward, viewMode)
-                  )}
-                  style={{ top: `${(index * 6 + 15)}%`, left: `${(index * 4 + 20)}%` }}
-                  onClick={() => setSelectedWard(ward)}
-                  title={ward.name}
-                />
-              ))}
-            </div>
-          </CardContent>
-          <DrawerContent>
-            <div className="mx-auto w-full max-w-2xl">
-              {selectedWard && (
-                <>
-                  <DrawerHeader>
-                    <DrawerTitle className="flex items-center gap-2 text-2xl">
-                      <MapPin className="h-6 w-6 text-primary" /> {selectedWard.name}
-                    </DrawerTitle>
-                    <DrawerDescription>Detailed water quality analytics for this ward.</DrawerDescription>
-                  </DrawerHeader>
-                  <div className="p-4 pb-0">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <Card>
-                        <CardHeader className="pb-2">
-                          <CardDescription className="flex items-center gap-1"><Shield className="h-4 w-4"/> Status</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <StatusBadge status={selectedWard.status} />
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardHeader className="pb-2">
-                          <CardDescription className="flex items-center gap-1"><Droplet className="h-4 w-4"/> pH Level</CardDescription>
-                        </CardHeader>
-                        <CardContent><p className="text-2xl font-bold">{selectedWard.ph}</p></CardContent>
-                      </Card>
-                      <Card>
-                        <CardHeader className="pb-2">
-                          <CardDescription className="flex items-center gap-1"><Wind className="h-4 w-4"/> Turbidity</CardDescription>
-                        </CardHeader>
-                        <CardContent><p className="text-2xl font-bold">{selectedWard.turbidity} <span className="text-sm text-muted-foreground">NTU</span></p></CardContent>
-                      </Card>
-                       <Card>
-                        <CardHeader className="pb-2">
-                          <CardDescription className="flex items-center gap-1"><AlertTriangle className="h-4 w-4"/> Risk Score</CardDescription>
-                        </CardHeader>
-                        <CardContent><p className="text-2xl font-bold">{selectedWard.riskScore}/100</p></CardContent>
-                      </Card>
+  const toggleLayer = (layer: keyof typeof layers) => {
+    setLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
+  };
+  
+  const wardTrend = mockData.trends.daily.map(d => ({...d, name: d.name.slice(-1)}));
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+        <div className="lg:col-span-3">
+            <Card className="h-full">
+                <CardHeader>
+                    <CardTitle>Interactive Ward Map</CardTitle>
+                    <CardDescription>Visualize water quality and community reports across Indore.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="relative aspect-[16/10] w-full bg-gray-200 rounded-md overflow-hidden border">
+                        <Image src="https://picsum.photos/seed/indoremap/1200/800" alt="Indore Map" layout="fill" objectFit="cover" data-ai-hint="city map" />
+                        
+                        {mockData.wards.map((ward, index) => {
+                          const isVisible = (layers.safe && ward.status === 'Safe') || (layers.risk && (ward.status === 'Moderate' || ward.status === 'Unsafe'));
+                          if (!isVisible) return null;
+                          
+                          return (
+                            <div
+                                key={ward.id}
+                                className={cn(
+                                    "absolute w-4 h-4 rounded-full cursor-pointer transform -translate-x-1/2 -translate-y-1/2 border-2 border-white/70 shadow-lg hover:scale-150 transition-transform",
+                                    riskColors[ward.status as keyof typeof riskColors]
+                                )}
+                                style={{ top: `${(index * 5 + 10)}%`, left: `${(index * 6 + 15)}%`}}
+                                onClick={() => setSelectedWard(ward)}
+                                title={ward.name}
+                            />
+                          )
+                        })}
+
+                         {layers.complaints && mockData.citizenReports.slice(0,5).map((report, index) => (
+                              <div
+                                key={report.reportId}
+                                className="absolute w-3 h-3 bg-purple-500 rounded-full border-2 border-white/50 animate-pulse"
+                                style={{ top: `${(index * 12 + 20)}%`, left: `${(index * 15 + 10)}%`}}
+                                title={`Complaint in ${report.ward}`}
+                            />
+                         ))}
+
                     </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </DrawerContent>
-        </Drawer>
-      </Card>
-    );
+                </CardContent>
+            </Card>
+        </div>
+        
+        <div className="space-y-6">
+             <Card>
+                <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+                    <Layers className="h-5 w-5"/>
+                    <div>
+                        <CardTitle className="text-lg">Map Layers</CardTitle>
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                        <Checkbox id="safe" checked={layers.safe} onCheckedChange={() => toggleLayer('safe')} />
+                        <Label htmlFor="safe" className="flex items-center gap-2 text-sm text-green-600 font-medium">Safe Zones</Label>
+                    </div>
+                     <div className="flex items-center space-x-2">
+                        <Checkbox id="risk" checked={layers.risk} onCheckedChange={() => toggleLayer('risk')} />
+                        <Label htmlFor="risk" className="flex items-center gap-2 text-sm text-red-600 font-medium">Risk Zones</Label>
+                    </div>
+                     <div className="flex items-center space-x-2">
+                        <Checkbox id="complaints" checked={layers.complaints} onCheckedChange={() => toggleLayer('complaints')} />
+                        <Label htmlFor="complaints" className="flex items-center gap-2 text-sm text-purple-600 font-medium">Complaint Density</Label>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg">Legend</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                    {Object.entries(layerIcons).map(([status, icon]) => (
+                        <div key={status} className="flex items-center gap-2 text-sm">
+                            {icon}
+                            <span>{status} Zone</span>
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+        </div>
+
+      <Drawer open={!!selectedWard} onOpenChange={(open) => !open && setSelectedWard(null)}>
+        <DrawerContent>
+            {selectedWard && (
+                <div className="mx-auto w-full max-w-4xl py-8">
+                    <DrawerHeader>
+                        <div className="flex items-center gap-4">
+                            <MapPin className="h-8 w-8 text-primary"/>
+                            <div>
+                                <DrawerTitle className="text-3xl">{selectedWard.name}</DrawerTitle>
+                                <DrawerDescription>Public Water Quality Analytics</DrawerDescription>
+                            </div>
+                        </div>
+                    </DrawerHeader>
+                    <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <Card>
+                            <CardHeader><CardTitle>Current Status</CardTitle></CardHeader>
+                            <CardContent className="space-y-2 text-sm">
+                                <div className="flex justify-between"><span>Overall:</span> <StatusBadge status={selectedWard.status}/></div>
+                                <div className="flex justify-between"><span>pH Level:</span> <span className="font-mono">{selectedWard.ph}</span></div>
+                                <div className="flex justify-between"><span>Turbidity:</span> <span className="font-mono">{selectedWard.turbidity} NTU</span></div>
+                                <div className="flex justify-between"><span>Risk Score:</span> <span className="font-mono">{selectedWard.riskScore}/100</span></div>
+                            </CardContent>
+                        </Card>
+                        <Card className="md:col-span-2">
+                            <CardHeader><CardTitle>7-Day Mini Trend</CardTitle></CardHeader>
+                            <CardContent>
+                                <ResponsiveContainer width="100%" height={150}>
+                                    <BarChart data={wardTrend}>
+                                        <XAxis dataKey="name" fontSize={10} />
+                                        <YAxis fontSize={10} />
+                                        <Tooltip contentStyle={{fontSize: '12px', padding: '4px 8px'}}/>
+                                        <Bar dataKey="ph" fill="hsl(var(--chart-1))" name="pH" />
+                                        <Bar dataKey="turbidity" fill="hsl(var(--chart-2))" name="NTU" />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+                    </div>
+                     <div className="p-4 flex justify-end">
+                        <Button onClick={() => setSelectedWard(null)}>Close</Button>
+                    </div>
+                </div>
+            )}
+        </DrawerContent>
+      </Drawer>
+
+    </div>
+  );
 }
