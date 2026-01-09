@@ -1,11 +1,10 @@
-import RealTimeMetrics from './real-time-metrics';
-import HeatmapView from './heatmap-view';
+// This component will be deleted and replaced by the new admin dashboard structure.
+// This is a placeholder.
+"use client";
+import React from 'react';
 
-export default function AdminDashboard() {
-  return (
-    <div className="space-y-6 lg:space-y-8">
-      <RealTimeMetrics />
-      <HeatmapView />
-    </div>
-  );
+const AdminDashboard = () => {
+    return <div>Redirecting...</div>;
 }
+
+export default AdminDashboard;

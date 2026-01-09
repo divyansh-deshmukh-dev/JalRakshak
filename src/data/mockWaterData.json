@@ -1,0 +1,61 @@
+{
+  "citySummary": {
+    "avgPh": 7.1,
+    "avgTurbidity": 5.8,
+    "activeAlerts": 12,
+    "unsafeZonesCount": 4,
+    "systemHealth": "Operational"
+  },
+  "wards": [
+    { "id": "ward001", "name": "Sudama Nagar", "status": "Safe", "ph": 7.5, "turbidity": 3.2, "temp": 25, "tds": 280 },
+    { "id": "ward002", "name": "Rajendra Nagar", "status": "Moderate", "ph": 6.8, "turbidity": 6.1, "temp": 26, "tds": 450 },
+    { "id": "ward003", "name": "Rau", "status": "Safe", "ph": 7.1, "turbidity": 4.5, "temp": 25, "tds": 320 },
+    { "id": "ward004", "name": "Annapurna", "status": "Unsafe", "ph": 8.5, "turbidity": 10.3, "temp": 28, "tds": 700 },
+    { "id": "ward005", "name": "Chhatribagh", "status": "Safe", "ph": 7.3, "turbidity": 2.8, "temp": 24, "tds": 250 },
+    { "id": "ward006", "name": "Dravid Nagar", "status": "Moderate", "ph": 7.8, "turbidity": 5.5, "temp": 26, "tds": 400 },
+    { "id": "ward007", "name": "Lokmanya Nagar", "status": "Safe", "ph": 7.0, "turbidity": 4.0, "temp": 25, "tds": 300 },
+    { "id": "ward008", "name": "Goma Ki Phel", "status": "Unsafe", "ph": 6.5, "turbidity": 8.9, "temp": 27, "tds": 650 },
+    { "id": "ward009", "name": "Sukhliya", "status": "Moderate", "ph": 6.9, "turbidity": 7.2, "temp": 26, "tds": 500 },
+    { "id": "ward010", "name": "Vijay Nagar", "status": "Safe", "ph": 7.4, "turbidity": 3.5, "temp": 25, "tds": 290 },
+    { "id": "ward011", "name": "Palasia", "status": "Safe", "ph": 7.2, "turbidity": 3.8, "temp": 25, "tds": 310 },
+    { "id": "ward012", "name": "Old Palasia", "status": "Moderate", "ph": 7.0, "turbidity": 5.9, "temp": 26, "tds": 420 },
+    { "id": "ward013", "name": "Tilak Nagar", "status": "Safe", "ph": 7.6, "turbidity": 2.5, "temp": 24, "tds": 240 },
+    { "id": "ward014", "name": "Manik Bagh", "status": "Unsafe", "ph": 6.7, "turbidity": 9.5, "temp": 28, "tds": 680 },
+    { "id": "ward015", "name": "Pipliyahana", "status": "Safe", "ph": 7.3, "turbidity": 4.1, "temp": 25, "tds": 330 }
+  ],
+  "sensors": [
+    {"sensorId": "SN-PH-01", "location": "Sudama Nagar", "ph": 7.5, "turbidity": 3.1, "temp": 25.1, "status": "Safe", "timestamp": "2024-07-30T10:00:00Z"},
+    {"sensorId": "RN-TB-03", "location": "Rajendra Nagar", "ph": 6.8, "turbidity": 6.2, "temp": 26.3, "status": "Moderate", "timestamp": "2024-07-30T10:01:00Z"},
+    {"sensorId": "AN-PH-02", "location": "Annapurna", "ph": 8.6, "turbidity": 10.5, "temp": 28.0, "status": "Unsafe", "timestamp": "2024-07-30T10:02:00Z"},
+    {"sensorId": "VN-TM-01", "location": "Vijay Nagar", "ph": 7.4, "turbidity": 3.4, "temp": 25.5, "status": "Safe", "timestamp": "2024-07-30T09:59:00Z"},
+    {"sensorId": "GP-ALL-01", "location": "Goma Ki Phel", "ph": 6.4, "turbidity": 9.1, "temp": 27.2, "status": "Unsafe", "timestamp": "2024-07-30T10:03:00Z"}
+  ],
+  "alerts": [
+    {"alertId": "A001", "severity": "Critical", "ward": "Annapurna", "description": "pH level dangerously high (8.6). Potential industrial contamination.", "timestamp": "2024-07-30T08:30:00Z", "status": "New"},
+    {"alertId": "A002", "severity": "High", "ward": "Goma Ki Phel", "description": "High turbidity (9.1 NTU) detected.", "timestamp": "2024-07-30T08:45:00Z", "status": "New"},
+    {"alertId": "A003", "severity": "Medium", "ward": "Rajendra Nagar", "description": "Turbidity exceeds moderate threshold.", "timestamp": "2024-07-29T15:00:00Z", "status": "Acknowledged"},
+    {"alertId": "A004", "severity": "Low", "ward": "Old Palasia", "description": "Slightly elevated turbidity detected.", "timestamp": "2024-07-28T10:00:00Z", "status": "Resolved"}
+  ],
+  "citizenReports": [
+    {"reportId": "CR001", "ward": "Annapurna", "timestamp": "2024-07-29T18:00:00Z", "imageUrl": "https://picsum.photos/seed/report1/400/300", "imageHint": "dirty water", "description": "Water from my tap is brown and smells bad.", "aiScore": 0.15, "status": "Pending"},
+    {"reportId": "CR002", "ward": "Vijay Nagar", "timestamp": "2024-07-29T12:00:00Z", "imageUrl": "https://picsum.photos/seed/report2/400/300", "imageHint": "clear water", "description": "Water looks clean, no issues.", "aiScore": 0.95, "status": "Approved"},
+    {"reportId": "CR003", "ward": "Goma Ki Phel", "timestamp": "2024-07-30T09:00:00Z", "imageUrl": "https://picsum.photos/seed/report3/400/300", "imageHint": "cloudy water", "description": "Water is cloudy today.", "aiScore": 0.40, "status": "Pending"}
+  ],
+  "infrastructure": {
+    "tanks": [
+      {"tankId": "TNK-SN-01", "location": "Sudama Nagar", "capacity": 500000, "level": 0.85, "status": "Operational"},
+      {"tankId": "TNK-AN-01", "location": "Annapurna", "capacity": 750000, "level": 0.92, "status": "Risk"},
+      {"tankId": "TNK-VN-01", "location": "Vijay Nagar", "capacity": 1000000, "level": 0.70, "status": "Maintenance"}
+    ],
+    "pipelines": [
+      {"pipelineId": "PL-SN-RN-01", "from": "Sudama Nagar", "to": "Rajendra Nagar", "status": "Operational"},
+      {"pipelineId": "PL-AN-GP-01", "from": "Annapurna", "to": "Goma Ki Phel", "status": "Risk"}
+    ]
+  },
+  "settings": {
+    "thresholds": {
+      "ph": { "min": 6.5, "max": 8.5 },
+      "turbidity": { "max": 5.0 }
+    }
+  }
+}
