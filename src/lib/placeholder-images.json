@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "indore_map",
-      "description": "A stylized map of Indore showing different wards.",
-      "imageUrl": "https://images.unsplash.com/photo-1476385822777-70eabacbd41f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaXR5JTIwbWFwfGVufDB8fHx8MTc2Nzk3OTgxOHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "city map"
+      "description": "A stylized map of Indore showing different wards with water quality hotspots.",
+      "imageUrl": "https://images.unsplash.com/photo-1712697235813-67e2567b3eed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMG1hcCUyMHdhdGVyfGVufDB8fHx8MTc2Nzk4MzI5OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city map water"
     },
     {
       "id": "heatmap_view",

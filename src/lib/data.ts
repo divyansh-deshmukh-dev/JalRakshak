@@ -8,16 +8,21 @@ export const publicSummaryData: PublicSummaryData = {
 };
 
 export const wards: WardData[] = [
-  { name: 'Ward 1', safetyLevel: 'safe', ph: 7.5, turbidity: 3.2 },
-  { name: 'Ward 2', safetyLevel: 'moderate', ph: 6.8, turbidity: 6.1 },
-  { name: 'Ward 3', safetyLevel: 'safe', ph: 7.1, turbidity: 4.5 },
-  { name: 'Ward 4', safetyLevel: 'unsafe', ph: 8.5, turbidity: 10.3 },
-  { name: 'Ward 5', safetyLevel: 'safe', ph: 7.3, turbidity: 2.8 },
-  { name: 'Ward 18', safetyLevel: 'moderate', ph: 7.8, turbidity: 5.5 },
-  { name: 'Ward 25', safetyLevel: 'safe', ph: 7.0, turbidity: 4.0 },
-  { name: 'Ward 42', safetyLevel: 'unsafe', ph: 6.5, turbidity: 8.9 },
-  { name: 'Ward 56', safetyLevel: 'moderate', ph: 6.9, turbidity: 7.2 },
-  { name: 'Ward 73', safetyLevel: 'safe', ph: 7.4, turbidity: 3.5 },
+    { name: 'Sudama Nagar', safetyLevel: 'safe', ph: 7.5, turbidity: 3.2 },
+    { name: 'Rajendra Nagar', safetyLevel: 'moderate', ph: 6.8, turbidity: 6.1 },
+    { name: 'Rau', safetyLevel: 'safe', ph: 7.1, turbidity: 4.5 },
+    { name: 'Annapurna', safetyLevel: 'unsafe', ph: 8.5, turbidity: 10.3 },
+    { name: 'Chhatribagh', safetyLevel: 'safe', ph: 7.3, turbidity: 2.8 },
+    { name: 'Dravid Nagar', safetyLevel: 'moderate', ph: 7.8, turbidity: 5.5 },
+    { name: 'Lokmanya Nagar', safetyLevel: 'safe', ph: 7.0, turbidity: 4.0 },
+    { name: 'Goma Ki Phel', safetyLevel: 'unsafe', ph: 6.5, turbidity: 8.9 },
+    { name: 'Sukhliya', safetyLevel: 'moderate', ph: 6.9, turbidity: 7.2 },
+    { name: 'Vijay Nagar', safetyLevel: 'safe', ph: 7.4, turbidity: 3.5 },
+    { name: 'Palasia', safetyLevel: 'safe', ph: 7.2, turbidity: 3.8 },
+    { name: 'Old Palasia', safetyLevel: 'moderate', ph: 7.0, turbidity: 5.9 },
+    { name: 'Tilak Nagar', safetyLevel: 'safe', ph: 7.6, turbidity: 2.5 },
+    { name: 'Manik Bagh', safetyLevel: 'unsafe', ph: 6.7, turbidity: 9.5 },
+    { name: 'Pipliyahana', safetyLevel: 'safe', ph: 7.3, turbidity: 4.1 },
 ];
 
 export const wardNames = [
