@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,29 +8,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Droplets, Loader2 } from 'lucide-react';
 
-export default function AdminLoginPage() {
+export default function CitizenLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
 
-
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // Mock authentication
     setTimeout(() => {
-      if (email === 'admin@indore.gov.in' && password === 'password') {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('adminLoggedIn', 'true');
-        }
-        router.push('/admin/dashboard');
+      if (email && password) {
+        localStorage.setItem('citizenLoggedIn', 'true');
+        window.location.href = '/';
       } else {
-        setError('Invalid credentials. Please try again.');
+        setError('Please enter valid credentials.');
         setIsLoading(false);
       }
     }, 1000);
@@ -40,9 +35,9 @@ export default function AdminLoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-            <Droplets className="mx-auto h-10 w-10 text-primary" />
-          <CardTitle className="text-2xl">JalSuraksha Admin</CardTitle>
-          <CardDescription>Enter your credentials to access the dashboard</CardDescription>
+          <Droplets className="mx-auto h-10 w-10 text-primary" />
+          <CardTitle className="text-2xl">Citizen Login</CardTitle>
+          <CardDescription>Access your JalSuraksha account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -51,7 +46,7 @@ export default function AdminLoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter admin email"
+                placeholder="your@email.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -63,7 +58,6 @@ export default function AdminLoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
