@@ -1,9 +1,36 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+import { User, LogOut } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import PublicOverviewPage from '@/components/public/pages/Overview';
 
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(localStorage.getItem('citizenLoggedIn') === 'true');
+    }
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('citizenLoggedIn');
+      setIsLoggedIn(false);
+    }
+    window.location.reload();
+  };
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-gray-50/75 lg:block">
+      <div className="hidden border-r bg-sky-50 lg:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <a href="/" className="flex items-center gap-2 font-semibold">
@@ -35,21 +62,9 @@ export default function Home() {
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                 Report Water
               </a>
-              <a href="/my-reports" className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:text-primary hover:bg-primary/10">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                My Reports
-              </a>
-              <a href="/ai-insights" className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:text-primary hover:bg-primary/10">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                AI Insights
-              </a>
               <a href="/infrastructure" className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:text-primary hover:bg-primary/10">
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                 Infrastructure
-              </a>
-              <a href="/compare-wards" className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:text-primary hover:bg-primary/10">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>
-                Compare Wards
               </a>
               <a href="/learn" className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 hover:text-primary hover:bg-primary/10">
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
@@ -60,18 +75,43 @@ export default function Home() {
         </div>
       </div>
       <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-white px-4 lg:h-[60px] lg:px-6">
+        <header className="flex h-14 items-center gap-4 border-b bg-sky-500 text-white px-4 lg:h-[60px] lg:px-6">
           <button className="lg:hidden p-2 border rounded">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
           </button>
           <div className="w-full flex-1">
-            <h1 className="font-semibold text-lg text-gray-800">Indore Smart City Water Authority</h1>
+            <h1 className="font-semibold text-lg text-white">Indore Smart City Water Authority</h1>
           </div>
-          <a href="/admin/login" className="px-4 py-2 border rounded hover:bg-gray-50">
+          <a href="/admin/login" className="h-9 px-4 border-2 border-white text-white rounded hover:bg-white hover:text-sky-600 bg-transparent flex items-center">
             Admin Portal
           </a>
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="rounded-full border w-8 h-8 bg-white text-sky-600 hover:bg-sky-50 flex items-center justify-center">
+                  <User className="h-4 w-4" />
+                  <span className="sr-only">Toggle user menu</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem disabled>Settings</DropdownMenuItem>
+                <DropdownMenuItem disabled>My Reports</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <a href="/citizen/login" className="h-9 px-4 bg-white text-sky-600 rounded hover:bg-sky-50 border-2 border-white flex items-center">
+              Login
+            </a>
+          )}
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-gray-50/75">
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-sky-50/30">
           <PublicOverviewPage />
         </main>
       </div>

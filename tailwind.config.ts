@@ -26,20 +26,47 @@ export default {
           foreground: 'hsl(var(--popover-foreground))',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: '#0EA5E9', // sky-500
+          foreground: '#FFFFFF',
+          50: '#F0F9FF',
+          100: '#E0F2FE',
+          500: '#0EA5E9',
+          600: '#0284C7',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: '#06B6D4', // cyan-500
+          foreground: '#FFFFFF',
+          50: '#ECFEFF',
+          100: '#CFFAFE',
+          500: '#06B6D4',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: '#14B8A6', // teal-500
+          foreground: '#FFFFFF',
+          50: '#F0FDFA',
+          100: '#CCFBF1',
+          500: '#14B8A6',
+        },
+        success: {
+          DEFAULT: '#059669', // emerald-600
+          light: '#ECFDF5', // emerald-50
+        },
+        warning: {
+          DEFAULT: '#D97706', // amber-600
+          light: '#FFFBEB', // amber-50
+        },
+        danger: {
+          DEFAULT: '#DC2626', // red-600
+          light: '#FEF2F2', // red-50
+        },
+        water: {
+          blue: '#38BDF8', // sky-400
+          teal: '#14B8A6', // teal-500
+          green: '#10B981', // emerald-500
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',

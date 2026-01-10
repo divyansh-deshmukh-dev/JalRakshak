@@ -125,12 +125,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
         {/* Desktop Sidebar */}
-      <div className="hidden border-r bg-gray-50/75 lg:block">
+      <div className="hidden border-r bg-teal-50 lg:block">
         {sidebarContent}
       </div>
       
       <div className="flex flex-col">
-        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-white px-6 sticky top-0 z-30">
+        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-teal-600 text-white px-6 sticky top-0 z-30">
           <Button variant="outline" size="icon" className="lg:hidden shrink-0" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
             <Menu className="h-6 w-6" />
           </Button>
@@ -155,16 +155,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           
           <div className="flex-1">
-            <h1 className="font-semibold text-lg text-gray-800">Indore Smart City Water Authority</h1>
+            <h1 className="font-semibold text-lg text-white">Indore Smart City Water Authority</h1>
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-green-600">
+            <div className="flex items-center gap-2 text-sm font-medium text-emerald-100">
                 <Dot className="h-6 w-6 animate-pulse" /> System Status: {mockData.citySummary.systemHealth}
             </div>
 
             <Link href="/">
-              <Button variant="outline">Citizen Portal</Button>
+              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600 bg-transparent border-2 h-9 px-4">Citizen Portal</Button>
             </Link>
 
             <DropdownMenu>
@@ -191,7 +191,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-gray-50/75">
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-teal-50/30">
           {children}
         </main>
       </div>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   Map,
@@ -15,6 +16,8 @@ import {
   BookOpen,
   Menu,
   Droplets,
+  User,
+  LogOut,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +25,14 @@ import {
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -31,15 +42,27 @@ const publicNavItems = [
   { href: '/trends', label: 'Trends', icon: TrendingUp },
   { href: '/alerts', label: 'Alert History', icon: AlertTriangle },
   { href: '/report-water', label: 'Report Water', icon: Send },
-  { href: '/my-reports', label: 'My Reports', icon: ClipboardList },
-  { href: '/ai-insights', label: 'AI Insights', icon: Cpu },
   { href: '/infrastructure', label: 'Infrastructure', icon: Building },
-  { href: '/compare-wards', label: 'Compare Wards', icon: GitCompare },
   { href: '/learn', label: 'Learn', icon: BookOpen },
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(localStorage.getItem('citizenLoggedIn') === 'true');
+    }
+  }, [pathname]);
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('citizenLoggedIn');
+      setIsLoggedIn(false);
+    }
+    window.location.reload();
+  };
 
   const NavLink = ({ item, onClick }: { item: typeof publicNavItems[0]; onClick?: () => void }) => (
     <Link
@@ -57,7 +80,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-gray-50/75 lg:block">
+      <div className="hidden border-r bg-sky-50 lg:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
@@ -75,7 +98,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         </div>
       </div>
       <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-white px-4 lg:h-[60px] lg:px-6">
+        <header className="flex h-14 items-center gap-4 border-b bg-sky-500 text-white px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -105,13 +128,38 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </Sheet>
 
           <div className="w-full flex-1">
-             <h1 className="font-semibold text-lg text-gray-800">Indore Smart City Water Authority</h1>
+             <h1 className="font-semibold text-lg text-white">Indore Smart City Water Authority</h1>
           </div>
           <Link href="/admin/login">
-            <Button variant="outline">Admin Portal</Button>
+            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-sky-600 bg-transparent border-2 h-9 px-4">Admin Portal</Button>
           </Link>
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full border w-8 h-8 bg-white text-sky-600 hover:bg-sky-50">
+                  <User className="h-4 w-4" />
+                  <span className="sr-only">Toggle user menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem disabled>Settings</DropdownMenuItem>
+                <DropdownMenuItem disabled>My Reports</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link href="/citizen/login">
+              <Button className="bg-white text-sky-600 hover:bg-sky-50 border-2 border-white h-9 px-4">Login</Button>
+            </Link>
+          )}
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-gray-50/75">
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-sky-50/30">
           {children}
         </main>
       </div>

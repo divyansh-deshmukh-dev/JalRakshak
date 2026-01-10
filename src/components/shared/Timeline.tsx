@@ -66,10 +66,10 @@ const TimelineTitle = React.forwardRef<
 TimelineTitle.displayName = "TimelineTitle";
 
 const TimelineDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-sm text-gray-500 mt-0.5", className)} {...props} />
+  <div ref={ref} className={cn("text-sm text-gray-500 mt-0.5", className)} {...props} />
 ));
 TimelineDescription.displayName = "TimelineDescription";
 
