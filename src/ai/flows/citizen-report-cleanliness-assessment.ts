@@ -1,78 +1,107 @@
+
 'use server';
+
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
+
 /**
- * @fileOverview Assesses the cleanliness of a citizen-submitted water quality report using AI.
- *
- * - assessCleanliness - A function that assesses the cleanliness of a water quality report.
- * - CitizenReportInput - The input type for the assessCleanliness function.
- * - CitizenReportOutput - The return type for the assessCleanliness function.
+ * @fileOverview Assesses the cleanliness of a citizen-submitted water quality report using Gemini SDK.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { z } from 'zod';
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 
+// Input Schema
 const CitizenReportInputSchema = z.object({
-  photoDataUri: z
-    .string()
-    .describe(
-      "A photo of the water sample, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
-    ),
-  ward: z.string().describe('The ward in Indore where the sample was taken.'),
-  description: z.string().optional().describe('Optional description of the water sample.'),
+  photoDataUri: z.string().describe("Base64 encoded data URI of the photo"),
+  ward: z.string(),
+  description: z.string().optional(),
 });
 export type CitizenReportInput = z.infer<typeof CitizenReportInputSchema>;
 
-const CitizenReportOutputSchema = z.object({
-  cleanlinessScore: z
-    .number()
-    .describe(
-      'A score between 0 and 1 indicating the cleanliness of the water, with 1 being the cleanest.'
-    ),
-  statusLabel: z
-    .string()
-    .describe(
-      'A label indicating the status of the water quality (e.g., Safe, Moderate, Unsafe).'
-    ),
-});
-export type CitizenReportOutput = z.infer<typeof CitizenReportOutputSchema>;
+// Output Schema
+export type CitizenReportOutput = {
+  cleanlinessScore: number;
+  statusLabel: string;
+  estimatedPH: number;
+  estimatedTurbidity: number;
+};
+
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENAI_API_KEY || '');
 
 export async function assessCleanliness(
   input: CitizenReportInput
 ): Promise<CitizenReportOutput> {
-  return assessCleanlinessFlow(input);
-}
+  try {
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: SchemaType.OBJECT,
+          properties: {
+            cleanlinessScore: {
+              type: SchemaType.NUMBER,
+              description: 'Score 0-1 (1 is cleanest)',
+            },
+            statusLabel: {
+              type: SchemaType.STRING,
+              description: 'Safe, Moderate, or Unsafe',
+            },
+            estimatedPH: {
+              type: SchemaType.NUMBER,
+              description: 'Estimated pH (0-14)',
+            },
+            estimatedTurbidity: {
+              type: SchemaType.NUMBER,
+              description: 'Estimated Turbidity in NTU',
+            },
+          },
+          required: ['cleanlinessScore', 'statusLabel', 'estimatedPH', 'estimatedTurbidity'],
+        },
+      },
+    });
 
-const assessCleanlinessPrompt = ai.definePrompt({
-  name: 'assessCleanlinessPrompt',
-  input: {schema: CitizenReportInputSchema},
-  output: {schema: CitizenReportOutputSchema},
-  prompt: `You are an AI assistant that assesses the cleanliness of water samples based on citizen reports.
+    const prompt = `
+You are an AI assistant for water quality assessment.
+Analyze the provided water sample photo, ward "${input.ward}", and description: "${input.description || ''}".
 
-You will be provided with a photo of the water sample, the ward where the sample was taken, and an optional description.
+Based on visual cues (color, clarity, particles) and the context:
+1. Estimate cleanliness score (0-1).
+2. Assign a status label (Safe, Moderate, Unsafe).
+3. ESTIMATE specific physical properties:
+   - pH (0-14). Neutral is ~7. Acidic/Corrosive < 6.5. Basic/Soapy > 8.5.
+   - Turbidity (NTU). Clear < 1. Cloudier means higher values (e.g., 5-10+).
 
-Based on this information, combined with your knowledge of potential pollution sources in Indore wards and historical reporting data, you will generate a cleanliness score (0-1) and a status label (Safe, Moderate, Unsafe).
+Output valid JSON matching the schema.
+    `;
 
-Photo: {{media url=photoDataUri}}
-Ward: {{{ward}}}
-Description: {{{description}}}
+    // Extract base64 from data URI
+    // Data URI format: data:image/png;base64,iVBORw0KGgo...
+    const base64Data = input.photoDataUri.split(',')[1];
+    const mimeType = input.photoDataUri.split(';')[0].split(':')[1];
 
-Consider the following factors when assessing cleanliness:
+    if (!base64Data) {
+      throw new Error("Invalid photo data URI");
+    }
 
-*   Visual appearance of the water in the photo (color, turbidity, visible particles).
-*   Known pollution sources in the specified ward.
-*   Historical water quality reports from the specified ward.
-*   Any details provided in the description.
+    const imagePart = {
+      inlineData: {
+        data: base64Data,
+        mimeType: mimeType || 'image/jpeg',
+      },
+    };
 
-Output the cleanlinessScore and statusLabel fields using the schema descriptions provided.`,
-});
+    const result = await model.generateContent([prompt, imagePart]);
+    const responseText = result.response.text();
 
-const assessCleanlinessFlow = ai.defineFlow(
-  {
-    name: 'assessCleanlinessFlow',
-    inputSchema: CitizenReportInputSchema,
-    outputSchema: CitizenReportOutputSchema,
-  },
-  async input => {
-    const {output} = await assessCleanlinessPrompt(input);
-    return output!;
+    return JSON.parse(responseText) as CitizenReportOutput;
+
+  } catch (error) {
+    console.error('Gemini Analysis Failed:', error);
+    // Return a safe fallback or rethrow
+    // For prototype, let's return a dummy fallback if AI fails, but let the user know by logging
+    throw error;
   }
-);
+}
