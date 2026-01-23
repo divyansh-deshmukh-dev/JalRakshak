@@ -73,6 +73,10 @@ def save_water_report(
     status_label=None
 ):
     """Saves water quality report to Firestore"""
+    if db is None:
+        print("Database not available - skipping save")
+        return str(uuid.uuid4())
+        
     try:
         status = status_label or "Safe"
 
@@ -102,6 +106,9 @@ def save_water_report(
 
 
 def get_heatmap_data():
+    if db is None:
+        return []
+        
     try:
         docs = db.collection("reports").stream()
         heatmap_list = []
@@ -123,6 +130,9 @@ def get_heatmap_data():
 
 
 def get_all_reports():
+    if db is None:
+        return []
+        
     try:
         docs = (
             db.collection("reports")
@@ -135,6 +145,10 @@ def get_all_reports():
 
 
 def save_shutdown_alert(ward, reason, severity="High"):
+    if db is None:
+        print("Database not available - skipping alert save")
+        return None
+        
     try:
         alert_data = {
             "id": str(uuid.uuid4()),
@@ -155,6 +169,9 @@ def save_shutdown_alert(ward, reason, severity="High"):
 
 
 def get_recent_alerts(limit=5):
+    if db is None:
+        return []
+        
     try:
         time_threshold = (
             datetime.datetime.utcnow() - datetime.timedelta(hours=24)
