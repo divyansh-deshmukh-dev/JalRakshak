@@ -1,4 +1,4 @@
-'use server';
+// Converted from server action to client-side function for static export
 
 /**
  * @fileOverview Summarizes recent citizen reports to identify emerging water quality issues and understand community sentiment.

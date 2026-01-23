@@ -1,4 +1,4 @@
-'use server';
+// Converted from server action to client-side function for static export
 
 import {
   assessCleanliness,
