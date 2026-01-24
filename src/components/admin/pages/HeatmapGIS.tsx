@@ -1,31 +1,68 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Layers, MapPin, X } from 'lucide-react';
-import Image from 'next/image';
+import { MapPin, X } from 'lucide-react';
 import mockData from '@/data/mockWaterData.json';
-import { cn } from '@/lib/utils';
 import StatusBadge from '@/components/shared/StatusBadge';
 
-type Ward = typeof mockData.wards[0];
+const AdminMapClient = dynamic(() => import('../AdminMapClient'), {
+  ssr: false,
+  loading: () => <div className="h-[600px] w-full bg-gray-100 rounded-lg flex items-center justify-center">Loading map...</div>
+});
 
-const statusColors = {
-  Safe: "bg-green-500",
-  Moderate: "bg-yellow-500",
-  Unsafe: "bg-red-500",
-};
+type Ward = typeof mockData.wards[0];
 
 export default function HeatmapGISPage() {
     const [layers, setLayers] = useState({ sensors: true, tanks: false, pipelines: false });
     const [selectedNode, setSelectedNode] = useState<Ward | null>(null);
+    const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
+    const [locationError, setLocationError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const indoreCenter: [number, number] = [22.7196, 75.8577];
+
+    const wardLocations = mockData.wards.map((ward, index) => ({
+        ...ward,
+        lat: indoreCenter[0] + (Math.random() - 0.5) * 0.1,
+        lng: indoreCenter[1] + (Math.random() - 0.5) * 0.1,
+    }));
 
     const toggleLayer = (layer: keyof typeof layers) => {
         setLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
     };
+
+    const getCurrentLocation = () => {
+        setIsLoading(true);
+        setLocationError('');
+
+        if (!navigator.geolocation) {
+            setLocationError('Geolocation is not supported by this browser.');
+            setIsLoading(false);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                setCurrentLocation([latitude, longitude]);
+                setIsLoading(false);
+            },
+            (error) => {
+                setLocationError('Unable to retrieve your location.');
+                setIsLoading(false);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+        );
+    };
+
+    useEffect(() => {
+        getCurrentLocation();
+    }, []);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
@@ -33,8 +70,8 @@ export default function HeatmapGISPage() {
                 <Card className="h-full">
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
-                            <CardTitle>Heatmap & GIS View</CardTitle>
-                            <CardDescription>Visualize water quality and infrastructure across the city.</CardDescription>
+                            <CardTitle>Ward Map & Infrastructure</CardTitle>
+                            <CardDescription>Interactive map showing water quality and infrastructure across Indore.</CardDescription>
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="flex items-center space-x-2">
@@ -51,23 +88,18 @@ export default function HeatmapGISPage() {
                             </div>
                         </div>
                     </CardHeader>
-                    <CardContent>
-                        <div className="relative aspect-[16/10] w-full bg-gray-200 rounded-md overflow-hidden">
-                            <Image src="https://picsum.photos/seed/heatmap/1200/800" alt="Heatmap GIS" layout="fill" objectFit="cover" data-ai-hint="gis heatmap" />
-                            {/* Sensor nodes */}
-                            {layers.sensors && mockData.wards.map((ward, index) => (
-                                <div
-                                    key={ward.id}
-                                    className={cn(
-                                        "absolute w-3 h-3 rounded-full cursor-pointer transform -translate-x-1/2 -translate-y-1/2 border-2 border-white",
-                                        statusColors[ward.status as keyof typeof statusColors]
-                                    )}
-                                    style={{ top: `${(index * 6 + 15)}%`, left: `${(index * 4 + 20)}%`}}
-                                    onClick={() => setSelectedNode(ward)}
-                                    title={ward.name}
-                                />
-                            ))}
-                        </div>
+                    <CardContent className="p-0">
+                        {locationError && (
+                            <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
+                                <p className="text-sm">{locationError}</p>
+                            </div>
+                        )}
+                        <AdminMapClient 
+                            currentLocation={currentLocation}
+                            wardLocations={wardLocations}
+                            onWardSelect={setSelectedNode}
+                            showSensors={layers.sensors}
+                        />
                     </CardContent>
                 </Card>
             </div>
@@ -114,7 +146,30 @@ export default function HeatmapGISPage() {
                                 <Button className="w-full">View Full Analytics</Button>
                             </div>
                         ) : (
-                            <p className="text-center text-muted-foreground py-10">Click on a node on the map to see details.</p>
+                            <div className="space-y-4">
+                                <p className="text-center text-muted-foreground py-4">Click on a sensor marker to see details.</p>
+                                <div className="text-sm">
+                                    <h4 className="font-medium mb-2">Legend:</h4>
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-4 h-4 rounded-full bg-green-500 border-2 border-white"></div>
+                                            <span>Safe Water Quality</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-4 h-4 rounded-full bg-yellow-500 border-2 border-white"></div>
+                                            <span>Moderate Quality</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-4 h-4 rounded-full bg-red-500 border-2 border-white"></div>
+                                            <span>Unsafe Water Quality</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-4 h-4 rounded-full bg-blue-500 border-2 border-white"></div>
+                                            <span>Your Location</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         )}
                     </CardContent>
                 </Card>
