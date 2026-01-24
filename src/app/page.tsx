@@ -130,8 +130,8 @@ export default function Home() {
               </div>
             </div>
           )}
-          <div className="w-full flex-1">
-            <h1 className="font-semibold text-lg text-white">Indore Smart City Water Authority</h1>
+          <div className="w-full flex-1 min-w-0">
+            <h1 className="font-semibold text-sm sm:text-base lg:text-lg text-white truncate">Indore Smart City Water Authority</h1>
           </div>
           <a href="/admin/login" className="h-9 px-4 border-2 border-white text-white rounded hover:bg-white hover:text-sky-600 bg-transparent flex items-center">
             Admin Portal
