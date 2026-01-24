@@ -30,7 +30,7 @@ app = FastAPI(title="JalRakshak API", version="2.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://jalrakshak-frontend.onrender.com",  # Replace with your actual frontend URL
+        "https://jalrakshak-frontend.onrender.com",  # Replace with your REAL frontend URL
         "https://*.onrender.com",  # Allow all Render domains
         "http://localhost:3000",   # Local development
         "https://localhost:3000",  # Local development HTTPS
