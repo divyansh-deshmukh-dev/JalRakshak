@@ -22,6 +22,11 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -47,17 +52,7 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-
-  useEffect(() => {
-    // Basic media query for sidebar
-    const mediaQuery = window.matchMedia('(min-width: 1024px)');
-    const handleResize = () => setIsSidebarOpen(mediaQuery.matches);
-    handleResize(); // Set initial state
-    mediaQuery.addEventListener('change', handleResize);
-    return () => mediaQuery.removeEventListener('change', handleResize);
-  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -92,10 +87,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <>{children}</>;
   }
 
-  const NavLink = ({ item }: { item: typeof navItems[0]}) => (
+  const NavLink = ({ item, onClick }: { item: typeof navItems[0]; onClick?: () => void }) => (
     <Link
         href={item.href}
-        onClick={() => { if (window.innerWidth < 1024) setIsSidebarOpen(false) }}
+        onClick={onClick}
         className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-600 transition-all hover:text-primary hover:bg-primary/10",
         pathname === item.href && "bg-primary/10 text-primary font-semibold"
@@ -131,28 +126,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       
       <div className="flex flex-col">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-teal-600 text-white px-4 lg:px-6 sticky top-0 z-30">
-          <Button variant="outline" size="icon" className="lg:hidden shrink-0 border-white text-white hover:bg-white hover:text-teal-600" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            <Menu className="h-5 w-5" />
-          </Button>
-
-          {/* Mobile Sidebar */}
-          <div className={cn("fixed inset-0 z-40 flex lg:hidden", !isSidebarOpen && "hidden")}>
-                <div className="fixed inset-0 bg-black/25" onClick={() => setIsSidebarOpen(false)} />
-                <div className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
-                    <div className="flex px-4 pt-5 pb-2 justify-between items-center">
-                         <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold text-gray-800">
-                            <Droplets className="h-6 w-6 text-primary" />
-                            <span>JalSuraksha</span>
-                        </Link>
-                        <Button variant="ghost" className="-m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400" onClick={() => setIsSidebarOpen(false)}>
-                            <X className="h-6 w-6" />
-                        </Button>
-                    </div>
-                    <div className="border-t border-gray-200 mt-2">
-                        {sidebarContent}
-                    </div>
-                </div>
-            </div>
+          {/* Mobile Navigation */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="lg:hidden shrink-0 border-white text-white hover:bg-white hover:text-teal-600">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="flex flex-col p-0">
+              <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold">
+                  <Droplets className="h-6 w-6 text-primary" />
+                  <span>JalSuraksha Admin</span>
+                </Link>
+              </div>
+              <nav className="grid gap-2 text-lg font-medium p-4">
+                {navItems.map((item) => (
+                  <SheetTrigger key={item.href} asChild>
+                    <NavLink item={item} />
+                  </SheetTrigger>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
           
           <div className="flex-1 min-w-0">
             <h1 className="font-semibold text-sm sm:text-base lg:text-lg text-white truncate">Indore Smart City Water Authority</h1>
