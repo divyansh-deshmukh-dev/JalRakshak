@@ -1,50 +1,32 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Environment variables
+.env
+.env.local
+.env.production
 
-# testing
-/coverage
+# Build outputs
+.next/
+dist/
+build/
 
-# next.js
-/.next/
-/out/
+# Uploads
+server/uploads/*
+!server/uploads/.gitkeep
 
-# production
-/build
+# IDE
+.vscode/
+.idea/
 
-# misc
+# OS
 .DS_Store
-*.pem
+Thumbs.db
 
-# debug
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-.genkit/*
-.env*
-
-# firebase
-firebase-debug.log
-<<<<<<< HEAD
-firestore-debug.log
-=======
-firestore-debug.log
-serviceAccountKey.json
->>>>>>> 890bd70dfd2fab6ef7f19573c7737281b00a5f7b

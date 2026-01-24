@@ -21,16 +21,22 @@ from database import (
     get_recent_alerts
 )
 
-# Load .env explicitly from the same directory as this script
-dotenv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-load_dotenv(dotenv_path)
+# Load environment variables
+load_dotenv()
 
 app = FastAPI(title="JalRakshak API", version="2.0")
 
+# CORS configuration for production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=[
+        "https://jalrakshak-frontend.onrender.com",  # Replace with your actual frontend URL
+        "https://*.onrender.com",  # Allow all Render domains
+        "http://localhost:3000",   # Local development
+        "https://localhost:3000",  # Local development HTTPS
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -328,4 +334,5 @@ def get_alerts():
         return {"error": str(e), "alerts": []}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
