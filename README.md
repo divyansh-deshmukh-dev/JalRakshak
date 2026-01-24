@@ -84,6 +84,14 @@ npm run dev
 - Backend API: `http://localhost:8000`
 - API Documentation: `http://localhost:8000/docs`
 
+## 🔐 Admin Login Credentials
+
+### Admin Access
+- **Email**: `admin@indore.gov.in`
+- **Password**: `password`
+
+> **Note**: Use these credentials to access the admin dashboard and manage water quality monitoring system.
+
 ## 🌐 Deployment on Render
 
 ### Backend Deployment
