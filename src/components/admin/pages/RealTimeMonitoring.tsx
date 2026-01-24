@@ -41,40 +41,75 @@ export default function RealTimeMonitoringPage() {
 
     return (
         <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
                 <div>
-                    <CardTitle>Real-Time Sensor Monitoring</CardTitle>
-                    <CardDescription>Live data feed from sensors across Indore.</CardDescription>
+                    <CardTitle className="text-lg sm:text-xl">Real-Time Sensor Monitoring</CardTitle>
+                    <CardDescription className="text-sm">Live data feed from sensors across Indore.</CardDescription>
                 </div>
                 <RefreshCw className={cn("h-5 w-5 text-muted-foreground", isRefreshing && "animate-spin")} />
             </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Sensor ID</TableHead>
-                            <TableHead>Location</TableHead>
-                            <TableHead>pH</TableHead>
-                            <TableHead>Turbidity (NTU)</TableHead>
-                            <TableHead>Temperature (°C)</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Last Update</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {sensors.map(sensor => (
-                            <TableRow key={sensor.sensorId} className={cn(isRefreshing && "opacity-50 transition-opacity")}>
-                                <TableCell className="font-mono">{sensor.sensorId}</TableCell>
-                                <TableCell>{sensor.location}</TableCell>
-                                <TableCell>{sensor.ph}</TableCell>
-                                <TableCell>{sensor.turbidity}</TableCell>
-                                <TableCell>{sensor.temp}</TableCell>
-                                <TableCell><StatusBadge status={sensor.status} /></TableCell>
-                                <TableCell>{new Date(sensor.timestamp).toLocaleTimeString()}</TableCell>
+            <CardContent className="p-0 sm:p-6">
+                {/* Mobile Card View */}
+                <div className="block sm:hidden space-y-4 p-4">
+                    {sensors.map(sensor => (
+                        <Card key={sensor.sensorId} className={cn("p-4", isRefreshing && "opacity-50 transition-opacity")}>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="font-mono text-sm font-semibold">{sensor.sensorId}</span>
+                                    <StatusBadge status={sensor.status} />
+                                </div>
+                                <div className="text-sm text-muted-foreground">{sensor.location}</div>
+                                <div className="grid grid-cols-3 gap-2 text-sm">
+                                    <div>
+                                        <div className="font-medium">pH</div>
+                                        <div>{sensor.ph}</div>
+                                    </div>
+                                    <div>
+                                        <div className="font-medium">Turbidity</div>
+                                        <div>{sensor.turbidity} NTU</div>
+                                    </div>
+                                    <div>
+                                        <div className="font-medium">Temp</div>
+                                        <div>{sensor.temp}°C</div>
+                                    </div>
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                    Last Update: {new Date(sensor.timestamp).toLocaleTimeString()}
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden sm:block overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="min-w-[100px]">Sensor ID</TableHead>
+                                <TableHead className="min-w-[150px]">Location</TableHead>
+                                <TableHead className="min-w-[80px]">pH</TableHead>
+                                <TableHead className="min-w-[120px]">Turbidity (NTU)</TableHead>
+                                <TableHead className="min-w-[120px]">Temperature (°C)</TableHead>
+                                <TableHead className="min-w-[100px]">Status</TableHead>
+                                <TableHead className="min-w-[120px]">Last Update</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {sensors.map(sensor => (
+                                <TableRow key={sensor.sensorId} className={cn(isRefreshing && "opacity-50 transition-opacity")}>
+                                    <TableCell className="font-mono">{sensor.sensorId}</TableCell>
+                                    <TableCell>{sensor.location}</TableCell>
+                                    <TableCell>{sensor.ph}</TableCell>
+                                    <TableCell>{sensor.turbidity}</TableCell>
+                                    <TableCell>{sensor.temp}</TableCell>
+                                    <TableCell><StatusBadge status={sensor.status} /></TableCell>
+                                    <TableCell>{new Date(sensor.timestamp).toLocaleTimeString()}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </CardContent>
         </Card>
     );

@@ -86,18 +86,21 @@ export default function ReportWaterPage() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="report" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="report" className="flex items-center gap-2">
-            <Send className="h-4 w-4" />
-            Report Water
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto sm:h-10">
+          <TabsTrigger value="report" className="flex items-center gap-2 text-xs sm:text-sm py-2">
+            <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Report Water</span>
+            <span className="sm:hidden">Report</span>
           </TabsTrigger>
-          <TabsTrigger value="my-reports" className="flex items-center gap-2">
-            <ClipboardList className="h-4 w-4" />
-            My Reports
+          <TabsTrigger value="my-reports" className="flex items-center gap-2 text-xs sm:text-sm py-2">
+            <ClipboardList className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">My Reports</span>
+            <span className="sm:hidden">Reports</span>
           </TabsTrigger>
-          <TabsTrigger value="ai-insights" className="flex items-center gap-2">
-            <Cpu className="h-4 w-4" />
-            AI Insights
+          <TabsTrigger value="ai-insights" className="flex items-center gap-2 text-xs sm:text-sm py-2">
+            <Cpu className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">AI Insights</span>
+            <span className="sm:hidden">AI</span>
           </TabsTrigger>
         </TabsList>
         
@@ -111,7 +114,7 @@ export default function ReportWaterPage() {
               {status === 'idle' || status === 'submitting' ? (
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div className="space-y-6">
                          <FormField
                           control={form.control}
@@ -142,7 +145,11 @@ export default function ReportWaterPage() {
                             <FormItem>
                               <FormLabel>Description (optional)</FormLabel>
                               <FormControl>
-                                <Textarea placeholder="e.g., The water is brown and has a strange smell." {...field} />
+                                <Textarea 
+                                  placeholder="e.g., The water is brown and has a strange smell." 
+                                  className="min-h-[100px] resize-none" 
+                                  {...field} 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -157,7 +164,7 @@ export default function ReportWaterPage() {
                             <FormLabel>Upload Photo</FormLabel>
                             <FormControl>
                               <div
-                                className="w-full aspect-video border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50"
+                                className="w-full aspect-video border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
                                 onClick={() => fileInputRef.current?.click()}
                               >
                                 <Input
@@ -170,9 +177,9 @@ export default function ReportWaterPage() {
                                 {imagePreview ? (
                                   <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-md" />
                                 ) : (
-                                  <div className="text-center text-muted-foreground">
-                                    <Upload className="mx-auto h-10 w-10 mb-2" />
-                                    <p>Click to upload an image</p>
+                                  <div className="text-center text-muted-foreground p-4">
+                                    <Upload className="mx-auto h-8 w-8 sm:h-10 sm:w-10 mb-2" />
+                                    <p className="text-sm sm:text-base">Click to upload an image</p>
                                     <p className="text-xs">PNG, JPG, or GIF</p>
                                   </div>
                                 )}

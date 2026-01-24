@@ -130,9 +130,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
       
       <div className="flex flex-col">
-        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-teal-600 text-white px-6 sticky top-0 z-30">
-          <Button variant="outline" size="icon" className="lg:hidden shrink-0" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            <Menu className="h-6 w-6" />
+        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-teal-600 text-white px-4 lg:px-6 sticky top-0 z-30">
+          <Button variant="outline" size="icon" className="lg:hidden shrink-0 border-white text-white hover:bg-white hover:text-teal-600" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            <Menu className="h-5 w-5" />
           </Button>
 
           {/* Mobile Sidebar */}
@@ -154,22 +154,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
             </div>
           
-          <div className="flex-1">
-            <h1 className="font-semibold text-lg text-white">Indore Smart City Water Authority</h1>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-semibold text-sm sm:text-base lg:text-lg text-white truncate">Indore Smart City Water Authority</h1>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-emerald-100">
-                <Dot className="h-6 w-6 animate-pulse" /> System Status: {mockData.citySummary.systemHealth}
+          <div className="flex items-center gap-2 lg:gap-4">
+            <div className="hidden sm:flex items-center gap-2 text-xs lg:text-sm font-medium text-emerald-100">
+                <Dot className="h-4 w-4 lg:h-6 lg:w-6 animate-pulse" /> 
+                <span className="hidden md:inline">System Status: {mockData.citySummary.systemHealth}</span>
+                <span className="md:hidden">Online</span>
             </div>
 
-            <Link href="/">
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600 bg-transparent border-2 h-9 px-4">Citizen Portal</Button>
+            <Link href="/" className="hidden sm:block">
+              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600 bg-transparent border-2 h-8 lg:h-9 px-2 lg:px-4 text-xs lg:text-sm">Citizen Portal</Button>
             </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full border w-8 h-8">
+                <Button variant="ghost" size="icon" className="rounded-full border w-8 h-8 border-white hover:bg-white hover:text-teal-600">
                   <User className="h-4 w-4" />
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
@@ -179,6 +181,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                     <Link href="/admin/settings">Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="sm:hidden">
+                    <Link href="/">Citizen Portal</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem disabled>Profile</DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -191,7 +196,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-teal-50/30">
+        <main className="flex flex-1 flex-col gap-4 p-2 sm:p-4 md:gap-6 md:p-6 bg-teal-50/30">
           {children}
         </main>
       </div>

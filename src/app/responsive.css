@@ -1,0 +1,75 @@
+/* Additional responsive utilities */
+
+/* Mobile-first approach */
+@media (max-width: 640px) {
+  /* Ensure tables are scrollable on mobile */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Better touch targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improved form spacing on mobile */
+  .form-mobile {
+    padding: 1rem;
+  }
+  
+  /* Better card spacing */
+  .card-mobile {
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1025px) {
+  .desktop-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Utility classes for responsive text */
+.text-responsive {
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .text-responsive {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive {
+    font-size: 1.125rem;
+  }
+}
+
+/* Responsive spacing */
+.spacing-responsive {
+  padding: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .spacing-responsive {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .spacing-responsive {
+    padding: 1.5rem;
+  }
+}
