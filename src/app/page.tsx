@@ -49,7 +49,7 @@ export default function Home() {
               <svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
               </svg>
-              <span>JalSuraksha Indore</span>
+              <span>JalRakshak</span>
             </a>
           </div>
           <div className="flex-1">
@@ -103,10 +103,10 @@ export default function Home() {
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <div className="fixed left-0 top-0 h-full w-80 max-w-[80vw] bg-white shadow-xl z-[99999]">
-                <div className="flex items-center justify-between p-4 border-b">
-                  <Link href="/" className="flex items-center gap-2 font-semibold">
-                    <Droplets className="h-6 w-6 text-primary" />
-                    <span>JalSuraksha Indore</span>
+                <div className="flex items-center justify-between p-4 border-b bg-sky-50">
+                  <Link href="/" className="flex items-center gap-2 font-semibold text-sky-600">
+                    <Droplets className="h-6 w-6 text-sky-600" />
+                    <span className="text-lg font-bold">JalRakshak</span>
                   </Link>
                   <button 
                     className="p-2 hover:bg-gray-100 rounded"
@@ -131,7 +131,7 @@ export default function Home() {
             </div>
           )}
           <div className="w-full flex-1 min-w-0">
-            <h1 className="font-semibold text-sm sm:text-base lg:text-lg text-white truncate">Indore Smart City Water Authority</h1>
+            <h1 className="font-semibold text-sm sm:text-base lg:text-lg text-white truncate">JalRakshak - Indore Smart City Water Authority</h1>
           </div>
           <a href="/admin/login" className="h-9 px-4 border-2 border-white text-white rounded hover:bg-white hover:text-sky-600 bg-transparent flex items-center">
             Admin Portal
