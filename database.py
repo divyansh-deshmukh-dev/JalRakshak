@@ -3,14 +3,26 @@ import datetime
 import uuid
 import firebase_admin
 from firebase_admin import credentials, firestore
+import json
 
-# 1. Initialize Firebase
+# Initialize Firebase using environment variables or service account file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Path to your downloaded service account key
-CERT_PATH = os.path.join(BASE_DIR, "serviceAccountKey.json")
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate(CERT_PATH)
+    # Try to use single JSON environment variable first (easier for production)
+    firebase_json = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
+    if firebase_json:
+        # Parse JSON from environment variable
+        firebase_config = json.loads(firebase_json)
+        cred = credentials.Certificate(firebase_config)
+    else:
+        # Fallback to service account file (for local development)
+        CERT_PATH = os.path.join(BASE_DIR, "serviceAccountKey.json")
+        if os.path.exists(CERT_PATH):
+            cred = credentials.Certificate(CERT_PATH)
+        else:
+            raise Exception("Firebase credentials not found. Please set FIREBASE_SERVICE_ACCOUNT_JSON environment variable or add serviceAccountKey.json")
+    
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
