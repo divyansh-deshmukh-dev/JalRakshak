@@ -22,11 +22,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -52,6 +47,7 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
@@ -111,7 +107,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
         <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
-            {navItems.map(item => <NavLink key={item.href} item={item} />)}
+            {navItems.map(item => (
+              <NavLink 
+                key={item.href} 
+                item={item} 
+                onClick={() => setIsMobileMenuOpen(false)}
+              />)
+            )}
             </nav>
         </div>
         </div>
@@ -126,30 +128,51 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       
       <div className="flex flex-col">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-teal-600 text-white px-4 lg:px-6 sticky top-0 z-30">
-          {/* Mobile Navigation */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden shrink-0 border-white text-white hover:bg-white hover:text-teal-600">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col p-0">
-              <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-                <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold">
-                  <Droplets className="h-6 w-6 text-primary" />
-                  <span>JalSuraksha Admin</span>
-                </Link>
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden shrink-0 border border-white text-white hover:bg-white hover:text-teal-600 rounded p-2 bg-transparent"
+            onClick={() => {
+              console.log('Admin mobile menu clicked, current state:', isMobileMenuOpen);
+              setIsMobileMenuOpen(!isMobileMenuOpen);
+            }}
+          >
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle navigation menu</span>
+          </button>
+
+          {/* Mobile Sidebar Overlay */}
+          {isMobileMenuOpen && (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <div 
+                className="fixed inset-0 bg-black/50" 
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+              <div className="fixed left-0 top-0 h-full w-80 max-w-[80vw] bg-white shadow-xl">
+                <div className="flex items-center justify-between p-4 border-b">
+                  <Link href="/admin/dashboard" className="flex items-center gap-2 font-semibold text-gray-800">
+                    <Droplets className="h-6 w-6 text-primary" />
+                    <span>JalSuraksha Admin</span>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                <nav className="p-4 space-y-2">
+                  {navItems.map(item => (
+                    <NavLink 
+                      key={item.href} 
+                      item={item} 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                  ))}
+                </nav>
               </div>
-              <nav className="grid gap-2 text-lg font-medium p-4">
-                {navItems.map((item) => (
-                  <SheetTrigger key={item.href} asChild>
-                    <NavLink item={item} />
-                  </SheetTrigger>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
+            </div>
+          )}
           
           <div className="flex-1 min-w-0">
             <h1 className="font-semibold text-sm sm:text-base lg:text-lg text-white truncate">Indore Smart City Water Authority</h1>

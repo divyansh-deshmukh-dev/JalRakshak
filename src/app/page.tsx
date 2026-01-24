@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, Menu, X, Droplets } from 'lucide-react';
+import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +13,19 @@ import {
 } from '@/components/ui/dropdown-menu';
 import PublicOverviewPage from '@/components/public/pages/Overview';
 
+const publicNavItems = [
+  { href: '/', label: 'Overview' },
+  { href: '/ward-map', label: 'Ward Map' },
+  { href: '/trends', label: 'Trends' },
+  { href: '/alerts', label: 'Alert History' },
+  { href: '/report-water', label: 'Report Water' },
+  { href: '/infrastructure', label: 'Infrastructure' },
+  { href: '/learn', label: 'Learn' },
+];
+
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -76,9 +88,48 @@ export default function Home() {
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-sky-500 text-white px-4 lg:h-[60px] lg:px-6">
-          <button className="lg:hidden p-2 border rounded">
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <button 
+            className="lg:hidden shrink-0 border-2 border-white text-white hover:bg-white hover:text-sky-600 rounded p-2 shadow-lg flex items-center justify-center"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <Menu className="h-5 w-5" />
           </button>
+          
+          {/* Mobile Menu Overlay */}
+          {isMobileMenuOpen && (
+            <div className="fixed inset-0 z-[99999] lg:hidden">
+              <div 
+                className="fixed inset-0 bg-black/50" 
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+              <div className="fixed left-0 top-0 h-full w-80 max-w-[80vw] bg-white shadow-xl z-[99999]">
+                <div className="flex items-center justify-between p-4 border-b">
+                  <Link href="/" className="flex items-center gap-2 font-semibold">
+                    <Droplets className="h-6 w-6 text-primary" />
+                    <span>JalSuraksha Indore</span>
+                  </Link>
+                  <button 
+                    className="p-2 hover:bg-gray-100 rounded"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <nav className="p-4 space-y-2">
+                  {publicNavItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-700 transition-all hover:text-primary hover:bg-primary/10"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            </div>
+          )}
           <div className="w-full flex-1">
             <h1 className="font-semibold text-lg text-white">Indore Smart City Water Authority</h1>
           </div>
